@@ -37,6 +37,10 @@ Hold BOOTSEL while plugging in USB, then drag-and-drop the `.uf2` file, or run:
 picotool load -x build/cim_v0-debug/examples/blink/blink.uf2
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow (issues, pull requests, CI) and the naming conventions for branches and commits.
+
 ## License
 
 BSD 3-Clause, see [LICENSE](LICENSE).
