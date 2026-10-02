@@ -1,0 +1,28 @@
+name: Decision (ADR)
+description: A design decision that results in an ADR in docs/adr/
+labels: [decision]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What needs to be decided, and why now?
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options
+      description: Candidates to evaluate, with links
+    validations:
+      required: true
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Criteria
+      description: What matters for the decision (e.g. tooling support, effort, license, compatibility)
+  - type: input
+    id: adr
+    attributes:
+      label: ADR file
+      placeholder: docs/adr/NNNN-short-title.md

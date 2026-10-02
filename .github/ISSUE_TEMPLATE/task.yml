@@ -1,0 +1,25 @@
+name: Task / feature
+description: A piece of work, e.g. a driver, tool or docs page
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should exist or work afterwards, and why
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: How do we verify it (hardware test, CI, docs)?
+    validations:
+      required: true
