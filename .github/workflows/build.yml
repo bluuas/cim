@@ -1,0 +1,44 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  firmware:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        preset:
+          - cim_proto_v7-debug
+          - cim_proto_v7-release
+          - cim_v0-debug
+          - cim_v0-release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build devcontainer image
+        uses: docker/build-push-action@v6
+        with:
+          context: .devcontainer
+          tags: cim-dev:latest
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build firmware (${{ matrix.preset }})
+        run: |
+          docker run --rm -v "$PWD:/w" -w /w/firmware cim-dev:latest \
+            bash -c "cmake --preset ${{ matrix.preset }} && cmake --build --preset ${{ matrix.preset }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.preset }}
+          path: |
+            build/${{ matrix.preset }}/**/*.uf2
+            build/${{ matrix.preset }}/**/*.elf
+          if-no-files-found: error
