@@ -1,12 +1,14 @@
-# TCAN4x5x driver: TI's driver library (unmodified, ti/) plus the CIM SPI port (port/).
+# TCAN4x5x driver: TI's driver library (unmodified, ti/), the CIM SPI port (port/)
+# and the thin tcan_* API (include/, src/).
 add_library(cim_tcan4x5x STATIC
     ti/TCAN4550.c
     port/TCAN4x5x_SPI.c
+    src/tcan.c
 )
 
 # SYSTEM: don't report warnings from TI's headers in code that includes them
 target_include_directories(cim_tcan4x5x SYSTEM PUBLIC ti)
-target_include_directories(cim_tcan4x5x PUBLIC port)
+target_include_directories(cim_tcan4x5x PUBLIC port include)
 
 target_link_libraries(cim_tcan4x5x PUBLIC cim_hal)
 
