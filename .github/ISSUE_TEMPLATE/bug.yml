@@ -1,0 +1,39 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: dropdown
+    id: board
+    attributes:
+      label: Board
+      options:
+        - CIM prototype v7 (RP2040)
+        - CIM v0 (RP2354A)
+        - not hardware related
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Firmware / tool version
+      description: Git commit or release tag
+      placeholder: e.g. v0.1.0 or 3a3206a
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include logs or CAN traces if available
+    validations:
+      required: true
