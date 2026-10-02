@@ -1,0 +1,23 @@
+// For format details, see https://aka.ms/devcontainer.json
+{
+    "name": "cim",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    // access to USB devices (picotool, debug probe)
+    "runArgs": ["--privileged", "-v", "/dev/bus/usb:/dev/bus/usb"],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "marus25.cortex-debug",
+                "ms-vscode.vscode-serial-monitor"
+            ],
+            "settings": {
+                "cmake.sourceDirectory": "${workspaceFolder}/firmware"
+            }
+        }
+    },
+    "remoteUser": "vscode"
+}

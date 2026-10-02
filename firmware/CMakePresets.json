@@ -1,0 +1,41 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/../build/${presetName}"
+    },
+    {
+      "name": "cim_v0-debug",
+      "displayName": "CIM v0 (RP2354A), Debug",
+      "inherits": "base",
+      "cacheVariables": { "PICO_BOARD": "cim_v0", "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "cim_v0-release",
+      "displayName": "CIM v0 (RP2354A), Release",
+      "inherits": "base",
+      "cacheVariables": { "PICO_BOARD": "cim_v0", "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "cim_proto_v7-debug",
+      "displayName": "CIM prototype v7 (RP2040), Debug",
+      "inherits": "base",
+      "cacheVariables": { "PICO_BOARD": "cim_proto_v7", "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "cim_proto_v7-release",
+      "displayName": "CIM prototype v7 (RP2040), Release",
+      "inherits": "base",
+      "cacheVariables": { "PICO_BOARD": "cim_proto_v7", "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "cim_v0-debug", "configurePreset": "cim_v0-debug" },
+    { "name": "cim_v0-release", "configurePreset": "cim_v0-release" },
+    { "name": "cim_proto_v7-debug", "configurePreset": "cim_proto_v7-debug" },
+    { "name": "cim_proto_v7-release", "configurePreset": "cim_proto_v7-release" }
+  ]
+}
