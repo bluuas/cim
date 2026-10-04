@@ -37,7 +37,7 @@ flowchart LR
 | TARGET B | U2 | GPIO13 | GPIO6 | GPIO19 | Pi GPIO 5, 7, 8, 11, 25, 9, 10, 24 (incl. Pi SPI0) |
 | TARGET C | U3 | GPIO23 | GPIO27 | GPIO22 | header J2 |
 
-All numbers are Pi BCM GPIOs on `gpiochip0`. The CIMs' USB is not routed on the HAT; a CIM can still be connected to a PC with its own USB-C.
+All numbers are Pi BCM GPIOs on `gpiochip0`. The CIMs' USB is not routed on the HAT; connect a CIM's own USB-C to a USB port of the Pi instead. That is safe while it sits in a slot: on proto v7, `+BATT` (D10) and USB VBUS (D60) are diode-ORed. Over USB the Pi gets the CIM's serial port (`/dev/serial/by-id/usb-Raspberry_Pi_Pico_*`) and, in BOOTSEL mode, `picotool`.
 
 When a slot's CIM is powered and idle, its SWDIO, SWCLK and BOOTSEL lines read high (`gpioget -c gpiochip0 16 26 21`). If they read low, the slot is empty or not powered.
 
@@ -62,7 +62,7 @@ When a slot's CIM is powered and idle, its SWDIO, SWCLK and BOOTSEL lines read h
    scp hil/setup-pi.sh cim-hil:
    ssh -t cim-hil ./setup-pi.sh && ssh cim-hil sudo reboot
    ```
-   The script installs git, python3-venv, OpenOCD, gpiod and i2c-tools, adds the user to the `gpio` and `i2c` groups, enables I2C (for the status display) and checks that OpenOCD has the `linuxgpiod` adapter.
+   The script installs git, python3-venv, OpenOCD, gpiod, picotool and i2c-tools, adds the user to the `gpio`, `i2c`, `plugdev` and `dialout` groups, enables I2C (for the status display) and checks that OpenOCD has the `linuxgpiod` adapter.
 4. Switch the Pi off, put the HAT on and the CIMs in. Check the power table above before applying 12 V.
 
 ## SWD check

@@ -14,14 +14,15 @@ packages=(
     python3-venv
     openocd     # Raspberry Pi build: has the linuxgpiod adapter and target/rp2040.cfg
     gpiod       # gpioget/gpioset/gpioinfo
+    picotool    # flash/reboot over USB (BOOTSEL); udev rule for plugdev comes with Raspberry Pi OS
     i2c-tools   # i2cdetect, for the status display
 )
 
 sudo apt-get update
 sudo apt-get install -y "${packages[@]}"
 
-# GPIO (SWD, BOOTSEL) and I2C without root
-sudo usermod -aG gpio,i2c "$USER"
+# GPIO (SWD, BOOTSEL), I2C, picotool and the CIMs' USB serial without root
+sudo usermod -aG gpio,i2c,plugdev,dialout "$USER"
 
 # I2C for the status display; takes effect after a reboot
 sudo raspi-config nonint do_i2c 0
