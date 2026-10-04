@@ -42,3 +42,14 @@ jobs:
             build/${{ matrix.preset }}/**/*.uf2
             build/${{ matrix.preset }}/**/*.elf
           if-no-files-found: error
+
+  host-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and run host tests
+        run: |
+          cmake -S firmware/tests/host -B build/host-tests
+          cmake --build build/host-tests
+          ctest --test-dir build/host-tests --output-on-failure
