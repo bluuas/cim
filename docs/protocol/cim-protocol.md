@@ -118,17 +118,33 @@ CRC-32 (IEEE 802.3, as used by zlib), with initial value `0xFFFFFFFF` and final 
 
 ## 7. Example: updating CIM 5
 
-```
-host → bcast  PING                                    every CIM answers: version, mode, uid
-host → 05     REBOOT mode=1                           → OK, CIM restarts into the bootloader
-host → 05     PING                                    → OK, mode=1 (bootloader)
-host → 05     INFO                                    → app start, max size, block size 4096
-host → 05     ERASE offset=0 length=0x30000           → OK (192 KB erased)
-host → 05     WRITE_BLOCK offset=0 length=4096 crc=…
-host → 05     DATA ×67                                → OK
-host → 05     WRITE_BLOCK offset=4096 …               … repeated for each block
-host → 05     SEAL size=… crc=…                       → OK (image sealed)
-host → 05     GO                                      → OK, application starts
+```mermaid
+sequenceDiagram
+    participant H as Host (0xF0)
+    participant C as CIM 5
+
+    H->>C: PING (broadcast)
+    C-->>H: OK, mode=app, uid, versions
+    H->>C: REBOOT mode=bootloader
+    C-->>H: OK
+    Note over C: restarts into the bootloader
+    H->>C: PING
+    C-->>H: OK, mode=bootloader
+    H->>C: INFO
+    C-->>H: OK, app start, max size, block size 4096
+    H->>C: ERASE offset=0 length=0x30000
+    C-->>H: OK (192 KB erased)
+    loop for each 4 KB block
+        H->>C: WRITE_BLOCK offset, length=4096, crc32
+        H->>C: DATA ×67 (offset + 62 bytes each)
+        Note over C: check CRC, program, read back
+        C-->>H: OK
+    end
+    H->>C: SEAL size, crc32
+    C-->>H: OK (image header written)
+    H->>C: GO
+    C-->>H: OK
+    Note over C: application starts
 ```
 
 ## 8. Changes from version 1
