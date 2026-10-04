@@ -31,11 +31,11 @@ The old protocol (*CanShell*) used one shared 11-bit ID (0x101) for requests and
 | CANopen + LSS | Object dictionary, SDO transfers, LSS for node ID assignment | CANopenNode has no CAN FD support. Uses large parts of the 11-bit ID space, which conflicts with the team DBC. |
 | XCP on CAN | Measurement and calibration protocol | No open CAN slave implementation; meant for calibration, not bootloading |
 | OpenBLT, Katapult | Existing open CAN bootloaders | GPLv3 (incompatible with BSD-3). Katapult's UID-based discovery is a good model. |
-| **Custom protocol, redesigned** | Small protocol of our own, designed for CAN FD from the start | **Chosen** |
+| **Thesis protocol (CAN Shell), revised** | The protocol from the master thesis, with its known flaws fixed | **Chosen** |
 
 ## Decision
 
-A **small custom protocol** ("CIM protocol"), specified in [docs/protocol/cim-protocol.md](../protocol/cim-protocol.md). It keeps the good ideas of the standards but none of their overhead:
+The **CIM protocol, version 2**, specified in [docs/protocol/cim-protocol.md](../protocol/cim-protocol.md). Version 1 is the *CAN Shell* protocol from the master thesis. Version 2 keeps its concept and flow (PING, REBOOT, and the bootloader stages INFO, ERASE, WRITE, SEAL, GO derived from usedbytes' serial bootloader) and fixes its flaws:
 
 - **29-bit IDs** with frame type, destination and source address in the ID. Separate IDs for requests, responses and data. Lowest priority, and no 11-bit IDs from the DBC are used.
 - **No segmentation:** one CAN FD frame is one command. Bulk data frames carry their own offset.
@@ -48,7 +48,8 @@ The bootloader and the application implement the same basic commands (PING, REBO
 
 ## Consequences
 
-- The protocol fits on two pages in our repo, and the code is our own: an estimated 2–4 KB in the bootloader, and ~300 lines of Python on python-can.
+- The changes from version 1 are listed in the specification, so the thesis stays usable as background.
+- The name *CAN Shell* is dropped because the protocol has no shell. The protocol fits on two pages in our repo, and the code is our own: an estimated 2–4 KB in the bootloader, and ~300 lines of Python on python-can.
 - We own the specification and the edge cases, and we must test them ourselves (host tests with a simulated device).
 - No native Wireshark decoding. An optional Lua dissector can be added later.
 - Diagnostics such as error codes (DTCs) are not covered. If needed, UDS can be added **to the application** later without changing the bootloader.

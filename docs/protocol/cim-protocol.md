@@ -1,12 +1,14 @@
 # CIM protocol
 
-- **Status:** Draft, protocol version 1
+- **Status:** Draft, protocol version 2
 - **Decision:** [ADR 0002](../adr/0002-device-protocol.md)
 
 The CIM protocol lets a host (usually a PC through a CIM acting as USB adapter) find CIMs on a CAN FD bus, reboot them and update their firmware. Both the bootloader and the application implement it.
 
 Every CIM has a **fixed address**, stored in its flash configuration. The address is written once when the board is commissioned, over USB or SWD, not over this protocol.
 
+
+Version 1 is the *CAN Shell* protocol from the master thesis ([bluuas/cim-mt](https://github.com/bluuas/cim-mt), `tex/chapters/design.tex`, section *CAN Shell Message Format*). Version 2 keeps its concept and flow; the changes are listed in [section 8](#8-changes-from-version-1).
 ## 1. Frames and IDs
 
 All frames are **CAN FD with bit rate switch and 29-bit IDs**. Shorter payloads are padded with `0x00` up to the next valid CAN FD length; receivers ignore the padding. Multi-byte values are **little-endian**.
@@ -72,8 +74,8 @@ response:  [0] command  [1] seq  [2]    status  [3..] data
 | `0x10` | INFO | ✓ | | none | app start u32, app max size u32, block size u16, bootloader version u32 |
 | `0x11` | ERASE | ✓ | | offset u32, length u32 | none |
 | `0x12` | WRITE_BLOCK | ✓ | | offset u32, length u16, crc32 u32 | on TIMEOUT: first missing offset u16 |
-| `0x13` | VERIFY_APP | ✓ | | size u32, crc32 u32 | none |
-| `0x14` | BOOT_APP | ✓ | | none | none |
+| `0x13` | SEAL | ✓ | | size u32, crc32 u32 | none |
+| `0x14` | GO | ✓ | | none | none |
 | `0x20`–`0x2F` | *reserved: configuration* | | | | |
 
 Offsets are relative to the start of the application area. ERASE and WRITE_BLOCK offsets must be multiples of the block size (4096 bytes, one flash sector).
@@ -88,9 +90,9 @@ Offsets are relative to the start of the application area. ERASE and WRITE_BLOCK
 - **WRITE_BLOCK**
   - Directly after the request, without waiting, the host sends the block as data frames (section 4).
   - When all bytes have arrived, the CIM checks the CRC32, programs the flash, reads it back and responds. A gap of more than 100 ms between data frames ends the block with TIMEOUT.
-- **VERIFY_APP**
+- **SEAL**
   - Computes the CRC32 over the first `size` bytes of the application area. If it matches, the CIM writes the image header that marks the application as valid ("seal").
-- **BOOT_APP**
+- **GO**
   - Responds OK and starts the application, or responds NO_VALID_APP.
 
 ## 4. Data frames
@@ -112,7 +114,7 @@ CRC-32 (IEEE 802.3, as used by zlib), with initial value `0xFFFFFFFF` and final 
 | default | 100 ms |
 | ERASE | 500 ms per 4 KB block |
 | WRITE_BLOCK | 500 ms after the last data frame |
-| VERIFY_APP | 2 s |
+| SEAL | 2 s |
 
 ## 7. Example: updating CIM 5
 
@@ -125,6 +127,24 @@ host → 05     ERASE offset=0 length=0x30000           → OK (192 KB erased)
 host → 05     WRITE_BLOCK offset=0 length=4096 crc=…
 host → 05     DATA ×67                                → OK
 host → 05     WRITE_BLOCK offset=4096 …               … repeated for each block
-host → 05     VERIFY_APP size=… crc=…                 → OK (image sealed)
-host → 05     BOOT_APP                                → OK, application starts
+host → 05     SEAL size=… crc=…                       → OK (image sealed)
+host → 05     GO                                      → OK, application starts
 ```
+
+## 8. Changes from version 1
+
+Version 1 (*CAN Shell*, master thesis) and version 2 cannot talk to each other. Version 2 uses only 29-bit IDs, so both can share a bus during a migration.
+
+| | Version 1 (CAN Shell) | Version 2 | Reason |
+|---|---|---|---|
+| CAN ID | one 11-bit ID (`0x101`) for all messages | 29-bit, with type, destination and source in the ID | separate request/response IDs, hardware filtering on the own address, no 11-bit IDs taken from the team DBC |
+| Header | 4 bytes in the payload: source, destination, response flag, command, end flag, length | addresses and type in the CAN ID; payload starts with command and `seq` | more payload per frame, responses can be matched to requests |
+| Errors | `ERROR` command, or no response at all | status byte in every response, 9 codes | no silent failures |
+| Large data | `BL WRITE` up to 1 KB, split over frames with `end_flag` | `WRITE_BLOCK` of 4 KB (one flash sector), data frames carry their offset | frames can arrive in any order, missing data is detected, one round trip per sector |
+| Synchronisation | `BL SYNC` stage | merged into `PING` (response includes app or bootloader mode) | one command less |
+| `BL SEAL` | flash address, size, CRC32 | `SEAL`: size, CRC32 | the application start address is fixed |
+| `BL GO` | start address as argument | `GO`: no argument | the application start address is fixed |
+| `SHELL`, `ERROR` | defined | removed | shell was never implemented; errors are status codes now |
+| Version | none | in the `PING` response | allows future changes |
+| Address checks | none (`BL WRITE` could overwrite the bootloader) | offsets relative to the application area, `BAD_RANGE` outside | protects the bootloader |
+
