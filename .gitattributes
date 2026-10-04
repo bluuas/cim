@@ -1,0 +1,2 @@
+# TI driver files are kept byte-identical to the vendor release (CRLF line endings)
+firmware/drivers/tcan4x5x/ti/** -text
