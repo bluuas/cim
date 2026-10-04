@@ -5,6 +5,7 @@ This folder records important design decisions: what was decided, why, and which
 | ADR | Title | Status |
 |---|---|---|
 | [0001](0001-pc-can-link.md) | PC ↔ CAN link | Accepted |
+| [0002](0002-device-protocol.md) | Device and bootloader protocol | Accepted |
 
 ## Format
 
