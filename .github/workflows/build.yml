@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   firmware:
@@ -67,3 +71,42 @@ jobs:
         run: |
           pip install pytest
           python -m pytest tools
+
+  # HIL tests (hil/runner) on the bench Pi. Only for pushes to main and manual
+  # runs, never for pull requests: the self-hosted runner executes the
+  # repository's code on real hardware. See docs/hil/README.md.
+  hil:
+    needs: firmware
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: [self-hosted, hil]
+    timeout-minutes: 20
+    concurrency:
+      group: hil-bench
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: firmware-cim_proto_v7-debug
+          path: build/cim_proto_v7-debug
+
+      - name: Set up Python
+        run: |
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install -q -r hil/runner/requirements.txt
+
+      - name: Run HIL tests
+        working-directory: hil/runner
+        run: |
+          # option=value: with a space, pytest takes the path for a test path
+          # before conftest.py has registered --firmware-dir
+          "$RUNNER_TEMP/venv/bin/python" -m pytest -v \
+            --firmware-dir="$GITHUB_WORKSPACE/build/cim_proto_v7-debug" \
+            --junitxml="$GITHUB_WORKSPACE/hil-report.xml"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hil-report
+          path: hil-report.xml
