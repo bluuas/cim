@@ -42,3 +42,10 @@ target_include_directories(test_commission PRIVATE
     ${FW}/util/include
 )
 add_test(NAME commission COMMAND test_commission)
+
+add_executable(test_log
+    test_log.c
+    ${FW}/log/src/log.c
+)
+target_include_directories(test_log PRIVATE ${FW}/log/include)
+add_test(NAME log COMMAND test_log)

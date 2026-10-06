@@ -4,6 +4,7 @@ Uses OpenOCD with the slot's config from hil/openocd. Variables are found by
 name in the ELF's symbol table, so test firmware only has to keep its results
 in a global variable (e.g. `state` in examples/config_counter).
 """
+import socket
 import struct
 import subprocess
 import tempfile
@@ -80,6 +81,48 @@ class Slot:
             if predicate(values) or time.monotonic() > deadline:
                 return values
             time.sleep(0.2)
+
+    def rtt_read(self, elf, seconds, symbol_name="cim_log_rtt"):
+        """Read the RTT log (firmware/log) for `seconds` while the target runs.
+
+        Starts OpenOCD with its RTT server on a port per slot (9090 + slot index),
+        so several slots can be read at the same time. Returns the received text.
+        """
+        address, _ = symbol(elf, symbol_name)
+        port = 9090 + ord(self.name) - ord("a")
+        args = ["openocd", "-f", str(self.cfg),
+                "-c", "gdb_port disabled; telnet_port disabled; tcl_port disabled",
+                "-c", "init",
+                "-c", f'rtt setup 0x{address:08X} 16 "SEGGER RTT"',
+                "-c", "rtt start",
+                "-c", f"rtt server start {port} 0"]
+        ocd = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+        try:
+            deadline = time.monotonic() + 10
+            while True:
+                try:
+                    conn = socket.create_connection(("localhost", port), timeout=1)
+                    break
+                except OSError:
+                    if ocd.poll() is not None or time.monotonic() > deadline:
+                        raise OpenOcdError(f"slot {self.name}: RTT server did not start:\n{ocd.stderr.read()[-2000:]}")
+                    time.sleep(0.1)
+            data = b""
+            end = time.monotonic() + seconds
+            with conn:
+                while (left := end - time.monotonic()) > 0:
+                    conn.settimeout(left)
+                    try:
+                        chunk = conn.recv(4096)
+                    except socket.timeout:
+                        break
+                    if not chunk:
+                        break
+                    data += chunk
+            return data.decode(errors="replace")
+        finally:
+            ocd.terminate()
+            ocd.wait(timeout=5)
 
 
 def set_status(text):
