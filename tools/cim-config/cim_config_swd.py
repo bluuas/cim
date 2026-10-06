@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) 2026, The CIM Contributors
 # SPDX-License-Identifier: BSD-3-Clause
-"""Read and change the configuration of a CIM over SWD (debug probe + OpenOCD).
+"""Read and change the configuration of a CIM over SWD (OpenOCD).
 
 Fallback for commissioning when the board has no working firmware with USB
 commissioning (see firmware/commission). Implements the same image format as
@@ -11,6 +11,7 @@ a failed write keeps the old configuration.
     cim_config_swd.py show
     cim_config_swd.py set-address 5
     cim_config_swd.py set-name pedalbox
+    cim_config_swd.py --openocd-config hil/openocd/slot-b.cfg show   # HIL Pi
 """
 
 import argparse
@@ -90,9 +91,15 @@ def describe(key, value):
 
 
 class OpenOcd:
-    def __init__(self, interface, target, speed):
-        self.base = ["openocd", "-f", f"interface/{interface}.cfg", "-f", f"target/{target}.cfg",
-                     "-c", f"adapter speed {speed}"]
+    def __init__(self, interface, target, speed, config=None):
+        if config:
+            self.base = ["openocd", "-f", str(config)]
+        else:
+            self.base = ["openocd", "-f", f"interface/{interface}.cfg", "-f", f"target/{target}.cfg",
+                         "-c", f"adapter speed {speed}"]
+        # no GDB/telnet/Tcl servers: they are not needed, and a debugger
+        # already running on the default ports would make OpenOCD fail
+        self.base += ["-c", "gdb_port disabled; telnet_port disabled; tcl_port disabled"]
 
     def run(self, *commands):
         args = self.base + [a for c in commands for a in ("-c", c)] + ["-c", "shutdown"]
@@ -120,6 +127,9 @@ def main():
     p.add_argument("--interface", default="cmsis-dap", help="OpenOCD interface (default: cmsis-dap)")
     p.add_argument("--target", default="rp2040", help="OpenOCD target (default: rp2040)")
     p.add_argument("--speed", type=int, default=5000, help="SWD speed in kHz (default: 5000)")
+    p.add_argument("--openocd-config", type=Path,
+                   help="OpenOCD config file with adapter and target, e.g. hil/openocd/slot-b.cfg; "
+                        "replaces --interface, --target and --speed")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("show", help="print the configuration")
     a = sub.add_parser("set-address", help="set the node address (1..239)")
@@ -128,7 +138,7 @@ def main():
     n.add_argument("name")
     args = p.parse_args()
 
-    ocd = OpenOcd(args.interface, args.target, args.speed)
+    ocd = OpenOcd(args.interface, args.target, args.speed, args.openocd_config)
     base = XIP_BASE + args.flash_size - 2 * SECTOR_SIZE
     data = ocd.read(base, 2 * SECTOR_SIZE)
     images = [Image.parse(data[:SECTOR_SIZE]), Image.parse(data[SECTOR_SIZE:])]
