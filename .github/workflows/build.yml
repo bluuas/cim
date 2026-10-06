@@ -99,9 +99,11 @@ jobs:
       - name: Run HIL tests
         working-directory: hil/runner
         run: |
+          # option=value: with a space, pytest takes the path for a test path
+          # before conftest.py has registered --firmware-dir
           "$RUNNER_TEMP/venv/bin/python" -m pytest -v \
-            --firmware-dir "$GITHUB_WORKSPACE/build/cim_proto_v7-debug" \
-            --junitxml "$GITHUB_WORKSPACE/hil-report.xml"
+            --firmware-dir="$GITHUB_WORKSPACE/build/cim_proto_v7-debug" \
+            --junitxml="$GITHUB_WORKSPACE/hil-report.xml"
 
       - uses: actions/upload-artifact@v4
         if: always()
