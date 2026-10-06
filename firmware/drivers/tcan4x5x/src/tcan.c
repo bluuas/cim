@@ -33,6 +33,12 @@
 #define PSR_EW            (1u << 6)
 #define PSR_BO            (1u << 7)
 
+/* Writable bits of the device interrupt enable register (0x0830). TI's
+ * REG_BITS_DEVICE_IE_MASK (0x7F69D700) also counts bits 24..30, but on the
+ * TCAN4550 they always read 1, so TI's TCAN4x5x_Device_ConfigureInterruptEnable()
+ * fails its readback check for any value with one of them cleared (#36). */
+#define DEV_IE_WRITABLE_MASK 0x0069D700u
+
 /* TI's MRAM configuration cache (TCAN4550.c), needed to switch to TX FIFO mode */
 #ifdef TCAN4x5x_MCAN_CACHE_CONFIGURATION
 extern uint32_t TCAN4x5x_MCAN_CACHE[9];
@@ -314,8 +320,11 @@ tcan_err_t tcan_init(const tcan_config_t *config)
 
     /* device interrupts off, clear what is pending (power-on etc.) */
     TCAN4x5x_Device_ClearSPIERR();
-    TCAN4x5x_Device_Interrupt_Enable dev_ie = {0};
-    if (!TCAN4x5x_Device_ConfigureInterruptEnable(&dev_ie)) {
+    // see comment in (#36)
+    // TCAN4x5x_Device_Interrupt_Enable dev_ie = {0};
+    // if (!TCAN4x5x_Device_ConfigureInterruptEnable(&dev_ie)) {
+    AHB_WRITE_32(REG_DEV_IE, 0);
+    if ((AHB_READ_32(REG_DEV_IE) & DEV_IE_WRITABLE_MASK) != 0) {
         return TCAN_ERR_CONFIG;
     }
     TCAN4x5x_Device_ClearInterruptsAll();

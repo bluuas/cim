@@ -26,6 +26,7 @@ Low-level driver for the TI TCAN4550/TCAN4551 CAN FD controller with integrated 
 ## Known issues in TI's code
 
 - **Uninitialised return value for DLC 0:** `TCAN4x5x_MCAN_ReadNextFIFO()` and `TCAN4x5x_MCAN_ReadRXBuffer()` return an uninitialised byte count when a zero-length frame is received. Use `TCAN4x5x_MCAN_DLCtoBytes(header.DLC)` instead of the return value. The compiler warning is silenced for `ti/TCAN4550.c` only. Tracked in #34.
+- **Wrong mask for the device interrupt enable register:** `REG_BITS_DEVICE_IE_MASK` (`0x7F69D700`) treats bits 24..30 of register 0x0830 as writable. On the TCAN4550 they always read 1 (measured: writing 0 reads back `0xFF9628FF`), so `TCAN4x5x_Device_ConfigureInterruptEnable()` returns `false` for any value with one of them cleared. `tcan_init()` writes the register itself and checks only the writable bits (`0x0069D700`). Found on the HIL bench, #36.
 
 ## Usage
 
@@ -40,7 +41,7 @@ static const tcan_filter_t filters[] = {
 tcan_config_t cfg = TCAN_CONFIG_DEFAULT;  /* CIM pins, 40 MHz, 500k / 2M, TX queue mode */
 cfg.filters = filters;                     /* omit to accept all frames */
 cfg.num_filters = 2;
-tcan_err_t err = tcan_init(&cfg);          /* TCAN_ERR_NO_VSUP without 12 V on VSUP */
+tcan_err_t err = tcan_init(&cfg);          /* TCAN_ERR_NO_VSUP if VSUP is undervoltage */
 
 for (;;) {
     tcan_poll();                           /* cheap when nothing is pending */
