@@ -53,3 +53,17 @@ jobs:
           cmake -S firmware/tests/host -B build/host-tests
           cmake --build build/host-tests
           ctest --test-dir build/host-tests --output-on-failure
+
+  tools-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run tool tests
+        run: |
+          pip install pytest
+          python -m pytest tools
