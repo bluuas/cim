@@ -19,6 +19,12 @@ The pinout is the same on both boards; see [firmware/boards/cim_pins.h](firmware
 
 The easiest way is the devcontainer: open the repo in VS Code and choose *Reopen in Container*. It provides the ARM toolchain, Pico SDK, picotool and openocd.
 
+FreeRTOS is a git submodule. Clone with `git clone --recurse-submodules`, or fetch it in an existing clone:
+
+```sh
+git submodule update --init
+```
+
 ```sh
 cd firmware
 cmake --preset cim_v0-debug          # or cim_proto_v7-debug, *-release
