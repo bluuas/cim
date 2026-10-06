@@ -26,3 +26,19 @@ target_include_directories(test_config PRIVATE
     ${FW}/util/include
 )
 add_test(NAME config COMMAND test_config)
+
+add_executable(test_commission
+    test_commission.c
+    flash_mock.c
+    ${FW}/commission/src/commission.c
+    ${FW}/config/src/config.c
+    ${FW}/util/src/crc32.c
+)
+target_include_directories(test_commission PRIVATE
+    .
+    ${FW}/hal/include
+    ${FW}/config/include
+    ${FW}/commission/include
+    ${FW}/util/include
+)
+add_test(NAME commission COMMAND test_commission)
