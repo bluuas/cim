@@ -78,6 +78,48 @@ openocd -c "adapter driver linuxgpiod" \
 
 A working slot prints `SWD DPIDR 0x0bc12477` and `Examination succeed` for both cores. `program <file>.elf verify reset exit` flashes a board in about 6 s.
 
+## CI: self-hosted runner
+
+The `hil` job in [`.github/workflows/build.yml`](../../.github/workflows/build.yml) runs the [HIL tests](../../hil/runner/README.md) on the bench after the firmware build. It runs on a GitHub Actions runner on the Pi with the label `hil`.
+
+```mermaid
+flowchart LR
+    push["push to main<br/>or manual run"] --> fw["firmware job<br/>(GitHub-hosted)"]
+    fw -- "artifact<br/>firmware-cim_proto_v7-debug" --> hil["hil job<br/>(runner on the Pi)"]
+    hil --> report["artifact hil-report<br/>(JUnit XML)"]
+```
+
+> [!CAUTION]
+> The repository is public, and a self-hosted runner executes the repository's code on the Pi. Therefore:
+> - The `hil` job runs only for pushes to `main` and manual runs (`workflow_dispatch`), never for pull requests.
+> - Fork pull requests need approval for all external contributors (Settings → Actions → General). Never approve a fork PR that changes workflows or uses `runs-on: [self-hosted, hil]` without reading it.
+> - The runner runs as its own user `gh-runner` without sudo, with access to GPIO, I2C, USB and serial ports only.
+
+### Set up the runner
+
+On the Pi, as the HIL user. Take the version and SHA-256 from GitHub (Settings → Actions → Runners → New self-hosted runner, Linux, **ARM64**); the token is valid for one hour.
+
+```sh
+# user without sudo, hardware groups only
+sudo useradd -m -s /usr/sbin/nologin -G gpio,i2c,plugdev,dialout gh-runner
+
+# download, check, extract (as gh-runner)
+sudo -u gh-runner -H bash -c '
+  mkdir -p ~/actions-runner && cd ~/actions-runner &&
+  curl -fsSL -o runner.tar.gz https://github.com/actions/runner/releases/download/v<version>/actions-runner-linux-arm64-<version>.tar.gz &&
+  echo "<sha256>  runner.tar.gz" | sha256sum -c &&
+  tar xzf runner.tar.gz'
+sudo /home/gh-runner/actions-runner/bin/installdependencies.sh
+
+# register; asks for the token, so it does not end up in the shell history
+sudo -u gh-runner -H bash -c 'cd ~/actions-runner && ./config.sh --url https://github.com/bluuas/cim --name cim-hil --labels hil'
+
+# systemd service
+sudo bash -c 'cd /home/gh-runner/actions-runner && ./svc.sh install gh-runner && ./svc.sh start'
+```
+
+The runner then shows as *Idle* under Settings → Actions → Runners. To run the HIL tests by hand: Actions → build → *Run workflow*.
+
 ## Known boards
 
 | Board | Status |
