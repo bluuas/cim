@@ -23,6 +23,9 @@ pico_sdk_init()
 
 add_compile_options(-Wall -Wextra)
 
+add_subdirectory(util)
 add_subdirectory(hal)
+add_subdirectory(config)
+add_subdirectory(commission)
 add_subdirectory(drivers)
 add_subdirectory(examples)

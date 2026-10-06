@@ -6,7 +6,7 @@
  * Minimal hardware abstraction used by CIM drivers.
  *
  * Only what the drivers need: SPI with manual chip select, GPIO,
- * GPIO edge interrupts with a context pointer, and delays.
+ * GPIO edge interrupts with a context pointer, delays and flash access.
  * The header has no Pico SDK types so drivers can be unit-tested on the host
  * against a mock implementation.
  */
@@ -95,6 +95,26 @@ void cim_delay_us(uint32_t us);
  * Weak: an RTOS layer can override it to yield instead of blocking.
  */
 void cim_delay_ms(uint32_t ms);
+
+/* --------------------------------- Flash ---------------------------------- */
+
+#define CIM_FLASH_SECTOR_SIZE 4096u /**< erase granularity */
+#define CIM_FLASH_PAGE_SIZE   256u  /**< program granularity */
+
+/** Size of the flash in bytes. */
+uint32_t cim_flash_size(void);
+
+/** Pointer to memory-mapped flash at offset (from the start of flash). */
+const uint8_t *cim_flash_ptr(uint32_t offset);
+
+/** Erase len bytes at offset. Both must be multiples of CIM_FLASH_SECTOR_SIZE. */
+bool cim_flash_erase(uint32_t offset, uint32_t len);
+
+/**
+ * Program len bytes at offset. Both must be multiples of CIM_FLASH_PAGE_SIZE,
+ * and the area must be erased.
+ */
+bool cim_flash_program(uint32_t offset, const uint8_t *data, uint32_t len);
 
 #ifdef __cplusplus
 }

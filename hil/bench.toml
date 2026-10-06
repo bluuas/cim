@@ -1,0 +1,20 @@
+# What is in which slot of the HIL bench (docs/hil/README.md).
+# The runner (hil/runner) only runs tests on slots that are present and have
+# no known defects; the others are skipped with the reason given here.
+
+[slots.a]
+openocd = "openocd/slot-a.cfg"
+board = "cim_proto_v7"
+present = false
+note = "board's +BATT path from the mezzanine is broken (#43)"
+
+[slots.b]
+openocd = "openocd/slot-b.cfg"
+board = "cim_proto_v7"
+present = true
+
+[slots.c]
+openocd = "openocd/slot-c.cfg"
+board = "cim_proto_v7"
+present = true
+defect = "defective RP2040 hardware divider (#41)"
