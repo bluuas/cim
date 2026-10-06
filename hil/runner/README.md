@@ -45,6 +45,8 @@ cd hil/runner
 | `--bench` | `hil/bench.toml` | bench description |
 | `--firmware-dir` | `build/cim_proto_v7-debug` | build directory with `examples/<name>/<name>.elf` |
 
+Write the options as `--firmware-dir=PATH`. With a space (`--firmware-dir PATH`), pytest takes `PATH` for a test path before `conftest.py` has registered the option, and fails with `unrecognized arguments`.
+
 ## Tests
 
 | Test | Firmware | Checks |
