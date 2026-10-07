@@ -57,6 +57,7 @@ theme:
 
 markdown_extensions:
   - admonition
+  - footnotes
   - attr_list
   - tables
   - toc:
@@ -79,7 +80,11 @@ validation:
 nav:
   - Home: README.md
   - Getting started:
+      - Build, flash, first run: getting-started.md
       - Writing an application: firmware/apps/README.md
+  - Hardware:
+      - Overview: hardware/overview.md
+      - Pinout: hardware/pinout.md
   - Firmware:
       - TCAN4x5x driver: firmware/drivers/tcan4x5x/README.md
       - Configuration store: firmware/config/README.md
