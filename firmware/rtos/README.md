@@ -40,6 +40,8 @@ After cloning: `git submodule update --init`.
 | `configNUMBER_OF_CORES` | 1 | FreeRTOS on core 0 only; 2 enables SMP |
 | `configTIMER_TASK_STACK_DEPTH` | 512 | words |
 
+Core 1 is unused with the default single-core setup, so `cim_rtos` sets `PICO_FLASH_ASSUME_CORE1_SAFE=1`: flash writes (config store) only disable interrupts on core 0. For SMP (`configNUMBER_OF_CORES 2`), this has to be removed, and `FreeRTOSConfig.h` stops the build until it is.
+
 The Pico SDK interop is on (`configSUPPORT_PICO_SYNC_INTEROP`, `configSUPPORT_PICO_TIME_INTEROP`): SDK mutexes, `sleep_ms()` and stdio over USB work together with the scheduler.
 
 ## Hooks and delays
