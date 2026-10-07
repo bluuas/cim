@@ -60,6 +60,10 @@
 #define configENABLE_BACKWARD_COMPATIBILITY     0
 
 #if configNUMBER_OF_CORES > 1
+#if PICO_FLASH_ASSUME_CORE1_SAFE
+/* set by cim_rtos for single core; with SMP, flash_safe_execute() must stop core 1 */
+#error "configNUMBER_OF_CORES > 1 needs PICO_FLASH_ASSUME_CORE1_SAFE=0 (see firmware/rtos/CMakeLists.txt)"
+#endif
 #define configUSE_CORE_AFFINITY      1
 #define configRUN_MULTIPLE_PRIORITIES 1
 #define configUSE_PASSIVE_IDLE_HOOK  0

@@ -55,4 +55,4 @@ Write the options as `--firmware-dir=PATH`. With a space (`--firmware-dir PATH`)
 | `test_tcan_probe.py` | `tcan_probe` | TCAN device ID over SPI, power-on interrupt on nINT (#5); VSUP state as JUnit property `vsup_ok` |
 | `test_log.py` | `log_demo` | log lines over RTT: format, levels (DEBUG compiled out), no lost lines (#10) |
 | `test_rtos.py` | `rtos_demo` | FreeRTOS: task rates, 1 kHz tick, `cim_delay_ms()` blocks instead of busy-waiting (#8) |
-| `test_example_app.py` | `apps/example` | the template app starts FreeRTOS and logs a heartbeat every second (#60) |
+| `test_example_app.py` | `apps/example` | template app: heartbeat, boot counter written to flash under FreeRTOS (+1 per reset), node address set over SWD (`tools/cim-config`) is used after a reset (#60, #11) |

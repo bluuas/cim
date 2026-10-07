@@ -24,4 +24,10 @@ target_sources(cim_rtos INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/rtos_hooks.c)
 
 target_include_directories(cim_rtos INTERFACE ${CMAKE_CURRENT_LIST_DIR}/config)
 
+# FreeRTOS runs on core 0 only (configNUMBER_OF_CORES 1), core 1 is unused.
+# Tell flash_safe_execute() (config store writes) that it only has to disable
+# interrupts. Without this, the port's FREE_RTOS_KERNEL_SMP makes it try to
+# stop core 1, which fails: assert in debug builds, error in release builds.
+target_compile_definitions(cim_rtos INTERFACE PICO_FLASH_ASSUME_CORE1_SAFE=1)
+
 target_link_libraries(cim_rtos INTERFACE FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 cim_hal cim_log pico_stdlib)
