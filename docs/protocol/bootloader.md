@@ -78,6 +78,6 @@ Version 1 of the protocol (*CAN Shell*) worked, but it had flaws that showed in 
 | segmentation with an end flag, no sequence numbers | blocks of one flash sector, data frames with offsets, CRC-32 per block |
 | bridge with custom USB-CDC protocol | CIM as gs_usb adapter, standard tooling on the PC |
 
-[^thesis-bl]: L. Betschart, *CAN FD Interface Module*, master's thesis, HSLU, 2024. Chapter 5 (Architecture & Design), *CAN FD Bootloader Architecture* with *Main Concept* and *Bootloader Stages*. The PDF will be added to this documentation.
+[^thesis-bl]: L. Betschart, *CAN FD Interface Module*, master's thesis, HSLU, 2024. Chapter 5 (Architecture & Design), *CAN FD Bootloader Architecture* with *Main Concept* and *Bootloader Stages*. See [Background](../background.md#the-masters-thesis) for the PDF.
 [^thesis-linker]: Thesis, chapter 7 (Software Implementation), *CAN FD Bootloader*, section *Memory and Linker Script*.
 [^adr2]: [ADR 0002: Device and bootloader protocol](../adr/0002-device-protocol.md), sections *Context* and *Decision*.

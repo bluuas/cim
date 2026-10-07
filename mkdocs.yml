@@ -102,6 +102,7 @@ nav:
       - OpenOCD per slot: hil/openocd/README.md
       - Test runner: hil/runner/README.md
       - Status display: hil/status-display/README.md
+  - Background: background.md
   - Decisions:
       - Overview: adr/README.md
       - "0001 PC to CAN link": adr/0001-pc-can-link.md

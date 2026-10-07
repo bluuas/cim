@@ -65,7 +65,7 @@ Details and pictures of v0 to v6 are in the thesis, chapter 6 (Hardware Implemen
 - [TLVM23615](https://www.ti.com/product/TLVM23615) product page and datasheet
 - The thesis, for the full component evaluation, the PCB stack-up, assembly and the measurements (power consumption, ripple, heat, SPI throughput) in chapter 8 (Testing and Validation).
 
-[^thesis]: L. Betschart, *CAN FD Interface Module*, master's thesis, Lucerne University of Applied Sciences and Arts (HSLU), 2024. Chapter 1, *Nomenclature*, and chapter 5 (Architecture & Design), *Hardware Architecture*. The PDF will be added to this documentation.
+[^thesis]: L. Betschart, *CAN FD Interface Module*, master's thesis, Lucerne University of Applied Sciences and Arts (HSLU), 2024. Chapter 1, *Nomenclature*, and chapter 5 (Architecture & Design), *Hardware Architecture*. See [Background](../background.md#the-masters-thesis) for the PDF.
 [^thesis-mcu]: Thesis, chapter 5, *Microcontroller* (with *Clock Source*, *Flash Memory*, *Debug Interface*), and chapter 6 (Hardware Implementation), *Microcontroller RP2040*.
 [^thesis-can]: Thesis, chapter 5, *CAN FD Controller*, section *Selection*, and chapter 6, *CAN FD Controller TCAN4551*.
 [^thesis-filter]: Thesis, chapter 6, *CAN FD Controller TCAN4551*, section *Filter*.

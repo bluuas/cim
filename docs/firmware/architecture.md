@@ -82,4 +82,4 @@ Today an application is linked at the start of flash, like any Pico SDK program.
 
 The thesis architecture had the same split between a user application and a platform, but used McuLib as the abstraction layer with handle-based modules on top of the Pico SDK, and one FreeRTOS task per application. [^thesis-sw] The open-source firmware keeps the split and the task model, and replaces McuLib with the small `cim_` modules above, so the platform has no dependency besides the Pico SDK and the FreeRTOS kernel.
 
-[^thesis-sw]: L. Betschart, *CAN FD Interface Module*, master's thesis, HSLU, 2024. Chapter 5 (Architecture & Design), *Software Architecture*, and chapter 7 (Software Implementation), *C Project Structure*. The PDF will be added to this documentation.
+[^thesis-sw]: L. Betschart, *CAN FD Interface Module*, master's thesis, HSLU, 2024. Chapter 5 (Architecture & Design), *Software Architecture*, and chapter 7 (Software Implementation), *C Project Structure*. See [Background](../background.md#the-masters-thesis) for the PDF.
