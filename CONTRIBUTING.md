@@ -93,6 +93,7 @@ Documentation lives next to the code: every module has a `README.md`, decisions 
 - Write links relative to the repository, as on GitHub (e.g. `../config/README.md`). The site rewrites them: links to pages stay links, links to source files point to GitHub.
 - A new Markdown file outside `docs/` is added to `extra.repo_docs` and to `nav` in `mkdocs.yml`; a file inside `docs/` only to `nav`.
 - Draw diagrams as [Mermaid](https://mermaid.js.org/) code blocks, not as images.
+- Write notes as [GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) (`> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`); the site renders them as admonitions.
 - `mkdocs build --strict` runs in CI and fails on broken links. Preview with `mkdocs serve` (in the devcontainer, or after `pip install -r docs/requirements.txt`).
 
 ## License

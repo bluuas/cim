@@ -10,6 +10,9 @@ the way GitHub renders them. Before a page is rendered, those links are
 rewritten for the site: a link to another page becomes a link to that page,
 and a link to any other file (sources, headers, scripts) points to the file on
 GitHub.
+
+Notes are written as GitHub alerts (``> [!NOTE]``), which GitHub renders; the
+hook turns them into Material admonitions for the site.
 """
 
 import os
@@ -19,6 +22,16 @@ import re
 from mkdocs.structure.files import File
 
 _LINK = re.compile(r'(!?)\[([^\]]*)\]\(([^)\s]+)((?:\s+"[^"]*")?)\)')
+
+# GitHub alert -> Material admonition type and title
+_ALERTS = {
+    "NOTE": ("note", "Note"),
+    "TIP": ("tip", "Tip"),
+    "IMPORTANT": ("info", "Important"),
+    "WARNING": ("warning", "Warning"),
+    "CAUTION": ("danger", "Caution"),
+}
+_ALERT = re.compile(r"^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*\n((?:>.*\n?)*)", re.M)
 
 # repository path -> File, for every page on the site
 _pages = {}
@@ -53,7 +66,15 @@ def on_files(files, config):
     return files
 
 
+def _alert_to_admonition(match):
+    kind, title = _ALERTS[match.group(1)]
+    lines = match.group(2).splitlines()
+    body = "".join("    " + line[2:] + "\n" if line.startswith("> ") else "\n" for line in lines)
+    return f'!!! {kind} "{title}"\n{body}'
+
+
 def on_page_markdown(markdown, page, config, files):
+    markdown = _ALERT.sub(_alert_to_admonition, markdown)
     root = _repo_root(config)
     page_dir = posixpath.dirname(_repo_path(page.file, config))
     src_dir = posixpath.dirname(page.file.src_uri)

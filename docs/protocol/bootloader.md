@@ -1,7 +1,7 @@
 # Bootloader concept
 
-!!! note "Status"
-    The CAN FD bootloader is planned for milestone M5 ([#14](https://github.com/bluuas/cim/issues/14), [#15](https://github.com/bluuas/cim/issues/15)). This page describes the concept it will follow: the design from the thesis, updated by [ADR 0002](../adr/0002-device-protocol.md). The frame formats and commands are specified in [CIM protocol](cim-protocol.md).
+> [!NOTE]
+> The CAN FD bootloader is planned for milestone M5 ([#14](https://github.com/bluuas/cim/issues/14), [#15](https://github.com/bluuas/cim/issues/15)). This page describes the concept it will follow: the design from the thesis, updated by [ADR 0002](../adr/0002-device-protocol.md). The frame formats and commands are specified in [CIM protocol](cim-protocol.md).
 
 ## Why a bootloader
 
