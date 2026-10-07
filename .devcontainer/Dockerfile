@@ -10,8 +10,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         git python3 cmake ninja-build build-essential pkg-config \
         gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib \
-        gdb-multiarch openocd libusb-1.0-0-dev usbutils \
+        gdb-multiarch openocd libusb-1.0-0-dev usbutils python3-pip \
     && rm -rf /var/lib/apt/lists/*
+
+# Docs site (mkdocs serve); keep the version in sync with docs/requirements.txt
+RUN pip install --no-cache-dir --break-system-packages mkdocs-material==9.7.7
 
 # Pico SDK (pinned)
 RUN git clone --depth 1 --branch ${PICO_SDK_VERSION} https://github.com/raspberrypi/pico-sdk.git /opt/pico-sdk \

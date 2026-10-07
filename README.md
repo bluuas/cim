@@ -47,6 +47,15 @@ Hold BOOTSEL while plugging in USB, then drag-and-drop the `.uf2` file, or run:
 picotool load -x build/cim_v0-debug/examples/blink/blink.uf2
 ```
 
+## Documentation
+
+The documentation site is at [bluuas.github.io/cim](https://bluuas.github.io/cim/). It is built with mkdocs from the Markdown files in this repository: the module READMEs, the ADRs in [docs/adr](docs/adr/README.md), the [protocol](docs/protocol/cim-protocol.md) and the [HIL test bench](docs/hil/README.md). To preview it locally:
+
+```sh
+pip install -r docs/requirements.txt
+mkdocs serve
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow (issues, pull requests, CI) and the naming conventions for branches and commits.

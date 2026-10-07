@@ -86,6 +86,15 @@ Closes #14
 
 See the [README](README.md#building) for building with the devcontainer. Firmware changes should be tested on real hardware where possible. State the board you used in the PR checklist.
 
+## Documentation
+
+Documentation lives next to the code: every module has a `README.md`, decisions are ADRs in `docs/adr/`, and cross-cutting pages are in `docs/`. The [documentation site](https://bluuas.github.io/cim/) is built from these files by mkdocs, see `mkdocs.yml`.
+
+- Write links relative to the repository, as on GitHub (e.g. `../config/README.md`). The site rewrites them: links to pages stay links, links to source files point to GitHub.
+- A new Markdown file outside `docs/` is added to `extra.repo_docs` and to `nav` in `mkdocs.yml`; a file inside `docs/` only to `nav`.
+- Draw diagrams as [Mermaid](https://mermaid.js.org/) code blocks, not as images.
+- `mkdocs build --strict` runs in CI and fails on broken links. Preview with `mkdocs serve` (in the devcontainer, or after `pip install -r docs/requirements.txt`).
+
 ## License
 
 By contributing, you agree that your contributions are licensed under the [BSD 3-Clause License](LICENSE).

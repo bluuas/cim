@@ -1,0 +1,102 @@
+site_name: CIM
+site_description: CAN FD Interface Module, an open-source platform for sensors and actuators on a CAN FD bus
+site_url: https://bluuas.github.io/cim/
+repo_url: https://github.com/bluuas/cim
+repo_name: bluuas/cim
+edit_uri: edit/main/
+
+docs_dir: docs
+site_dir: build/site
+strict: true
+
+hooks:
+  - docs/hooks/repo_docs.py
+
+# Markdown files outside docs/ that are part of the site, see docs/hooks/repo_docs.py.
+extra:
+  repo_branch: main
+  repo_docs:
+    - README.md
+    - CONTRIBUTING.md
+    - firmware/apps/README.md
+    - firmware/commission/README.md
+    - firmware/config/README.md
+    - firmware/drivers/tcan4x5x/README.md
+    - firmware/log/README.md
+    - firmware/rtos/README.md
+    - hil/openocd/README.md
+    - hil/runner/README.md
+    - hil/status-display/README.md
+    - tools/cim-config/README.md
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - content.code.copy
+    - content.action.edit
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+
+validation:
+  links:
+    anchors: warn
+
+nav:
+  - Home: README.md
+  - Getting started:
+      - Writing an application: firmware/apps/README.md
+  - Firmware:
+      - TCAN4x5x driver: firmware/drivers/tcan4x5x/README.md
+      - Configuration store: firmware/config/README.md
+      - Logging: firmware/log/README.md
+      - FreeRTOS: firmware/rtos/README.md
+      - Commissioning: firmware/commission/README.md
+  - Protocol:
+      - CIM protocol: protocol/cim-protocol.md
+  - Tools:
+      - cim-config: tools/cim-config/README.md
+  - HIL test bench:
+      - Bench setup: hil/README.md
+      - OpenOCD per slot: hil/openocd/README.md
+      - Test runner: hil/runner/README.md
+      - Status display: hil/status-display/README.md
+  - Decisions:
+      - Overview: adr/README.md
+      - "0001 PC to CAN link": adr/0001-pc-can-link.md
+      - "0002 Device protocol": adr/0002-device-protocol.md
+  - Contributing: CONTRIBUTING.md
