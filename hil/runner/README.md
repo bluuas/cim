@@ -24,7 +24,7 @@ sequenceDiagram
 | Fixture | |
 |---|---|
 | `slot` | `Slot` of a usable slot: `flash(elf)`, `reset()`, `read(addr, size)`, `read_var(elf, name, fmt)`, `wait_var(elf, name, fmt, predicate)`, `rtt_read(elf, seconds)` |
-| `firmware` | `firmware("config_counter")` returns `<firmware-dir>/examples/config_counter/config_counter.elf` |
+| `firmware` | `firmware("config_counter")` returns `<firmware-dir>/examples/config_counter/config_counter.elf`; `firmware("example", subdir="apps")` an app |
 
 `read_var` finds the variable in the ELF's symbol table and unpacks it with a [`struct`](https://docs.python.org/3/library/struct.html) format, e.g. `"<IIi"` for `struct { uint32_t; uint32_t; int32_t; }`. Test firmware only needs to keep its results in a global variable.
 
@@ -55,3 +55,4 @@ Write the options as `--firmware-dir=PATH`. With a space (`--firmware-dir PATH`)
 | `test_tcan_probe.py` | `tcan_probe` | TCAN device ID over SPI, power-on interrupt on nINT (#5); VSUP state as JUnit property `vsup_ok` |
 | `test_log.py` | `log_demo` | log lines over RTT: format, levels (DEBUG compiled out), no lost lines (#10) |
 | `test_rtos.py` | `rtos_demo` | FreeRTOS: task rates, 1 kHz tick, `cim_delay_ms()` blocks instead of busy-waiting (#8) |
+| `test_example_app.py` | `apps/example` | the template app starts FreeRTOS and logs a heartbeat every second (#60) |

@@ -49,6 +49,31 @@ jobs:
             build/${{ matrix.preset }}/**/*.elf
           if-no-files-found: error
 
+  # A project that uses CIM from outside (as a git submodule would), see
+  # firmware/tests/consumer. Keeps cim_import.cmake / cim_add_app() working.
+  consumer:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build devcontainer image
+        uses: docker/build-push-action@v6
+        with:
+          context: .devcontainer
+          tags: cim-dev:latest
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build external project
+        run: |
+          docker run --rm -v "$PWD:/w" -w /w cim-dev:latest bash -c \
+            "cmake -S firmware/tests/consumer -B build/consumer -G Ninja -DPICO_BOARD=cim_proto_v7 && cmake --build build/consumer"
+
   host-tests:
     runs-on: ubuntu-24.04
     steps:

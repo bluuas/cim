@@ -47,11 +47,12 @@ def slot(request):
 
 @pytest.fixture
 def firmware(request):
-    """firmware('config_counter') -> path of that example's ELF."""
+    """firmware('config_counter') -> examples/config_counter/config_counter.elf;
+    firmware('example', subdir='apps') -> apps/example/example.elf."""
     build = request.config.getoption("--firmware-dir")
 
-    def find(name):
-        elf = build / "examples" / name / f"{name}.elf"
+    def find(name, subdir="examples"):
+        elf = build / subdir / name / f"{name}.elf"
         if not elf.is_file():
             pytest.fail(f"{elf} not found; build the firmware or pass --firmware-dir")
         return elf

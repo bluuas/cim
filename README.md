@@ -33,6 +33,10 @@ cmake --build --preset cim_v0-debug
 
 The output is in `build/<preset>/examples/blink/blink.uf2`.
 
+## Applications
+
+Applications live in [`firmware/apps/<name>`](firmware/apps/README.md) and share one structure; [`firmware/apps/example`](firmware/apps/example) is the template. A separate repository can use CIM as a git submodule and add its own applications the same way, see [firmware/apps/README.md](firmware/apps/README.md#using-cim-as-a-submodule).
+
 Without the devcontainer you need `arm-none-eabi-gcc`, CMake ≥ 3.13, Ninja and the [Pico SDK](https://github.com/raspberrypi/pico-sdk) ≥ 2.1, with `PICO_SDK_PATH` set.
 
 ## Flashing
