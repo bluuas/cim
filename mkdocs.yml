@@ -86,6 +86,7 @@ nav:
       - Overview: hardware/overview.md
       - Pinout: hardware/pinout.md
   - Firmware:
+      - Architecture: firmware/architecture.md
       - TCAN4x5x driver: firmware/drivers/tcan4x5x/README.md
       - Configuration store: firmware/config/README.md
       - Logging: firmware/log/README.md
@@ -93,6 +94,7 @@ nav:
       - Commissioning: firmware/commission/README.md
   - Protocol:
       - CIM protocol: protocol/cim-protocol.md
+      - Bootloader concept: protocol/bootloader.md
   - Tools:
       - cim-config: tools/cim-config/README.md
   - HIL test bench:
