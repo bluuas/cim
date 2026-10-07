@@ -47,9 +47,22 @@ Hold BOOTSEL while plugging in USB, then drag-and-drop the `.uf2` file, or run:
 picotool load -x build/cim_v0-debug/examples/blink/blink.uf2
 ```
 
+## Documentation
+
+The documentation site is at [bluuas.github.io/cim](https://bluuas.github.io/cim/). It is built with mkdocs from the Markdown files in this repository: the module READMEs, the ADRs in [docs/adr](docs/adr/README.md), the [protocol](docs/protocol/cim-protocol.md) and the [HIL test bench](docs/hil/README.md). To preview it locally:
+
+```sh
+pip install -r docs/requirements.txt
+mkdocs serve
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow (issues, pull requests, CI) and the naming conventions for branches and commits.
+
+## Acknowledgements
+
+CIM started as the master's thesis *CAN FD Interface Module* by Lukas Betschart at the Lucerne University of Applied Sciences and Arts (HSLU), supervised by Prof. Erich Styger, in 2024. The first firmware was built on his [McuLib](https://github.com/ErichStyger/McuOnEclipseLibrary). The boards were designed for, built with and raced by [AMZ Racing](https://www.amzracing.ch/), whose members wrote the first applications and found the bugs in the car. This repository starts with a fresh history; the original work lives on in [bluuas/cim-mt](https://github.com/bluuas/cim-mt), [AMZ-Racing/cim](https://github.com/AMZ-Racing/cim) and [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware).
 
 ## License
 
