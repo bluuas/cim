@@ -1,6 +1,6 @@
 # Contributing to CIM
 
-Thanks for your interest in CIM! This page describes how work is organised and what a contribution should look like.
+How work on CIM is organised: issues, branches, commits, pull requests.
 
 ## Workflow
 
@@ -10,14 +10,14 @@ Thanks for your interest in CIM! This page describes how work is organised and w
    - The PR title follows [Conventional Commits](#commit-messages), because it becomes the commit message on `main`.
    - Put `Closes #<issue>` in the description.
    - Fill in the checklist: CI, hardware test, docs.
-4. **CI must pass.** Every PR builds the firmware for all boards. `main` is protected and only accepts PRs that are up to date and green.
+4. **CI must pass.** Every PR builds the firmware for all boards, builds the docs site and runs the host and tool tests. `main` is protected and only accepts PRs that are up to date and green.
 5. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards.
 
 Design decisions (e.g. protocols, architecture) are discussed in an issue labelled `decision` and recorded as an ADR in `docs/adr/`.
 
 ## Branch names
 
-We follow [Conventional Branch](https://conventionalbranch.org/):
+Branch names follow [Conventional Branch](https://conventionalbranch.org/):
 
 ```
 <type>/issue-<number>-<short-description>
@@ -40,7 +40,7 @@ Examples: `feat/issue-6-tcan-api`, `fix/issue-42-rx-overflow`, `chore/issue-24-c
 
 ## Commit messages
 
-We follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
+Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
 
 ```
 <type>(<optional scope>)!: <description>

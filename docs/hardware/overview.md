@@ -58,7 +58,7 @@ Both boards have the same pinout and the same CAN controller, regulator, LED and
 
 Details and pictures of v0 to v6 are in the thesis, chapter 6 (Hardware Implementation), section *Hardware Design Evolution*. [^thesis-hist]
 
-## Further reading
+## Datasheets and thesis
 
 - [RP2040 datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf) and [RP2350 datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)
 - [TCAN4551-Q1](https://www.ti.com/product/TCAN4551-Q1) product page and datasheet

@@ -33,7 +33,7 @@ flowchart TB
 | `rtos` | `cim_rtos` | | FreeRTOS kernel as submodule, shared `FreeRTOSConfig.h`, hooks, and a task-friendly `cim_delay_ms()` ([details](../../firmware/rtos/README.md)) |
 | `boards` | | `cim_pins.h` | pin definitions shared by both boards, selected with `PICO_BOARD` |
 
-Rules that keep this structure readable:
+Rules:
 
 - A module lives in `firmware/<module>/` with `include/cim/`, `src/`, a `CMakeLists.txt` that defines `cim_<module>`, and a `README.md` that is part of this site.
 - Names are `snake_case` with the `cim_` prefix in the platform and `app_` in applications.

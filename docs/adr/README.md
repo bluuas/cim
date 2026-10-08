@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-This folder records important design decisions: what was decided, why, and which alternatives were rejected. Each decision starts as a GitHub issue labelled `decision`, where it is discussed. The resulting ADR is added through a pull request.
+Design decisions: what was decided, why, and which alternatives were rejected. Each decision starts as a GitHub issue labelled `decision`; the ADR is added through a pull request.
 
 | ADR | Title | Status |
 |---|---|---|

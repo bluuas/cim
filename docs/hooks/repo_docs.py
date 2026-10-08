@@ -47,7 +47,7 @@ def _repo_path(file, config):
 
 def on_files(files, config):
     root = _repo_root(config)
-    for path in config.extra.get("repo_docs", []):
+    for path in config.extra["repo_docs"]:
         if files.get_file_from_path(path) is not None:
             continue
         files.append(
@@ -78,7 +78,7 @@ def on_page_markdown(markdown, page, config, files):
     root = _repo_root(config)
     page_dir = posixpath.dirname(_repo_path(page.file, config))
     src_dir = posixpath.dirname(page.file.src_uri)
-    branch = config.extra.get("repo_branch", "main")
+    branch = config.extra["repo_branch"]
 
     def rewrite(match):
         bang, text, url, title = match.groups()

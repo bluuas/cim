@@ -1,14 +1,6 @@
 # Getting started
 
-This page takes you from a clone to a CIM that blinks, talks over USB and has a node address. Afterwards, [write your own application](../firmware/apps/README.md).
-
-```mermaid
-flowchart LR
-    build["Build<br/>cmake preset"] --> flash["Flash<br/>UF2 or SWD"]
-    flash --> run["Run<br/>LED + USB serial"]
-    run --> commission["Commission<br/>set address"]
-    commission --> app["Your application"]
-```
+From a clone to a CIM that blinks, talks over USB and has a node address. Then: [write an application](../firmware/apps/README.md).
 
 ## What you need
 
@@ -29,7 +21,7 @@ In an existing clone, run `git submodule update --init`.
 
 ## Build
 
-The easiest way is the devcontainer: open the repository in VS Code and choose *Reopen in Container*. It provides the ARM toolchain, the Pico SDK, picotool and OpenOCD. Without it you need `arm-none-eabi-gcc`, CMake 3.13 or newer, Ninja and the [Pico SDK](https://github.com/raspberrypi/pico-sdk) 2.1 or newer, with `PICO_SDK_PATH` set.
+The devcontainer (VS Code, *Reopen in Container*) provides the ARM toolchain, the Pico SDK, picotool and OpenOCD. Without it you need `arm-none-eabi-gcc`, CMake 3.13 or newer, Ninja and the [Pico SDK](https://github.com/raspberrypi/pico-sdk) 2.1 or newer, with `PICO_SDK_PATH` set.
 
 There is one CMake preset per board and build type:
 
@@ -54,7 +46,7 @@ The build directory is `build/<preset>/` at the repository root. Every example a
 picotool load -x build/cim_proto_v7-debug/examples/blink/blink.uf2
 ```
 
-A board that already runs firmware with commissioning restarts into the USB bootloader with the serial command `reboot bootsel`, so you do not need to reach the button.
+A board that already runs firmware with commissioning restarts into the USB bootloader with the serial command `reboot bootsel`, so the button is not needed.
 
 **Over SWD.** With a CMSIS-DAP probe on the SWD pads (or the pads of the mezzanine connector):
 
@@ -98,6 +90,6 @@ The LED blinks red until an address is set and shows green afterwards. All comma
 
 ## Next steps
 
-- [Writing an application](../firmware/apps/README.md): the structure every app shares, and how to use CIM as a submodule in your own repository.
+- [Writing an application](../firmware/apps/README.md): the structure every app shares, and how to use CIM as a submodule in a separate repository.
 - [CIM protocol](protocol/cim-protocol.md): how a host talks to the boards over CAN.
 - [Contributing](../CONTRIBUTING.md): branches, commits, pull requests.

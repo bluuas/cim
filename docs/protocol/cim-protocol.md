@@ -7,8 +7,8 @@ The CIM protocol lets a host (usually a PC through a CIM acting as USB adapter) 
 
 Every CIM has a **fixed address**, stored in its flash configuration. The address is written once when the board is commissioned, over USB or SWD, not over this protocol.
 
-
 Version 1 is the *CAN Shell* protocol from the master thesis ([bluuas/cim-mt](https://github.com/bluuas/cim-mt), `tex/chapters/design.tex`, section *CAN Shell Message Format*). Version 2 keeps its concept and flow; the changes are listed in [section 8](#8-changes-from-version-1).
+
 ## 1. Frames and IDs
 
 All frames are **CAN FD with bit rate switch and 29-bit IDs**. Shorter payloads are padded with `0x00` up to the next valid CAN FD length; receivers ignore the padding. Multi-byte values are **little-endian**.

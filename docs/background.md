@@ -6,9 +6,9 @@ Where CIM comes from, what it has to do, and where to read more.
 
 A Formula Student car has a central VCU and dozens of small peripherals in the wire harness: pedal sensors, fans, displays, valves. Each of them needs a microcontroller and a bus connection, and the data they exchange keeps growing. The classic CAN 2.0 bus with 8-byte frames at 1 Mbit/s reached its limit in AMZ's cars, and the previous Mini CAN Module had no way to be updated in the car. [^thesis-intro]
 
-CIM is the answer: one small board with CAN FD, a capable MCU and the common sensor and actuator interfaces, which can be flashed over the bus. Everything application-specific goes on a carrier board under it.
+CIM is one small board with CAN FD, a capable MCU and the common sensor and actuator interfaces, flashable over the bus. Everything application-specific goes on a carrier board under it.
 
-CAN FD keeps the CAN bus but allows up to 64 bytes per frame and a faster bit rate for the data phase, up to 8 Mbit/s with the TCAN4551. For the protocol itself see [CAN in Automation](https://www.can-cia.org/can-knowledge/can-fd) and the [RP2040 datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf) for the MCU; this documentation does not repeat them.
+CAN FD keeps the CAN bus but allows up to 64 bytes per frame and a faster bit rate for the data phase, up to 8 Mbit/s with the TCAN4551. For the protocol see [CAN in Automation](https://www.can-cia.org/can-knowledge/can-fd); for the MCUs the datasheets under [Hardware overview](hardware/overview.md#datasheets-and-thesis).
 
 ## Requirements
 
