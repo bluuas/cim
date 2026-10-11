@@ -122,12 +122,12 @@ The runner then shows as *Idle* under Settings → Actions → Runners. To run t
 
 ## Known boards
 
-The three proto v7 boards are assembled differently and each has a known fault. Positions as of 2026-10-11; do not swap them, the mezzanine connector is rated for 50 mating cycles.
+The three proto v7 boards are assembled differently and have a history of bad solder joints at the mezzanine connector J1. Positions as of 2026-10-11; do not swap them, the connector is rated for 50 mating cycles.
 
 | Board | Assembly | Slot | State |
 |---|---|---|---|
-| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads | B | defective RP2040 hardware divider (#41): large divisions return wrong results, so no firmware tests; CAN, SWD and power are fine. A good chip prints `q=0x00022e09 r=0x00000001` in the divider test of #41, this one `q=0x00022fff r=0x0000e347`. |
-| "noUSB" | USB-C connector not populated | A | CAN broken on the board: never transmits, REC saturates with stuff errors, hears nothing from the bus; fault moved with the board between slots. Check J1 pins 11/12 and L40 to the TCAN bus pins. SWD and power fine. |
-| "full" | fully assembled, UID `E66208F4176B6B38` | C | SWD from the HAT fails (the DAP only answers WAIT), in slots A and C; check J1 pins 8/9. CAN untested. Flash over USB with picotool meanwhile. |
+| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads | B | defective RP2040 hardware divider (#41): large divisions return wrong results, so no firmware tests on it; CAN, SWD and power are fine. A good chip prints `q=0x00022e09 r=0x00000001` in the divider test of #41, this one `q=0x00022fff r=0x0000e347`. |
+| "full" | fully assembled, UID `E66208F4176B6B38` | C | all good after resoldering J1: +BATT, SWD and CAN. Before, the +BATT path sagged under load (`tcan_init()` returned `TCAN_ERR_NO_VSUP` while the idle `tcan_probe` saw no undervoltage), SWD answered only WAIT, and CAN showed the stuck-stub signature below. |
+| "noUSB" | USB-C connector not populated | A | not reachable over SWD at the moment (lines low: unpowered or not seated). Its CAN showed the stuck-stub signature: never transmits, REC 127 with stuff errors, hears nothing. Check J1 pins 11/12. |
 
-All three faults are pairs of neighbouring J1 pins, which points at the mezzanine solder joints of the prototypes. Slot wiring for SWD and power is verified on all three slots.
+A board whose CANH/CANL do not reach the terminated bus (open J1 pins 11/12) drives only its own C51/C52; the line returns to recessive slower than one bit at 500 kbit/s, the node loses arbitration against its own SOF and then counts stuff errors as a receiver (TEC 0, REC 127). The TCAN's bus-fault flags do not show it.

@@ -6,8 +6,8 @@
 [slots.a]
 openocd = "openocd/slot-a.cfg"
 board = "cim_proto_v7"
-present = true
-can = false   # CAN path broken on the board (J1 pins 11/12 or L40), see docs/hil/README.md
+present = false
+note = "board not reachable over SWD (unpowered or not seated), see docs/hil/README.md"
 
 [slots.b]
 openocd = "openocd/slot-b.cfg"
@@ -18,5 +18,4 @@ defect = "defective RP2040 hardware divider (#41)"
 [slots.c]
 openocd = "openocd/slot-c.cfg"
 board = "cim_proto_v7"
-present = false
-note = "board's SWD contact on J1 (pins 8/9) is broken; flash it over USB until resoldered"
+present = true

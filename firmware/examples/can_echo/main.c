@@ -16,6 +16,7 @@
 #include "cim/hal.h"
 #include "pico/stdlib.h"
 #include "tcan.h"
+#include "TCAN4550.h"
 
 volatile struct {
     int32_t init_err;      /* tcan_init() result, 0 = OK, -4 = no VSUP */
@@ -31,6 +32,7 @@ volatile struct {
     uint32_t rx_overflows;
     uint32_t last_error;   /* MCAN last error code, arbitration phase (tcan_status_t) */
     uint32_t last_data_error; /* same, data phase */
+    uint32_t dev_ir;       /* TCAN device interrupt register 0x0820: bus fault flags in bits 8, 10, 24..31 */
 } state;
 
 static void led(bool r, bool g, bool b)
@@ -102,6 +104,9 @@ int main(void)
             state.rx_overflows = st.rx_overflows;
             state.last_error = st.last_error;
             state.last_data_error = st.last_data_error;
+            TCAN4x5x_Device_Interrupts ir;
+            TCAN4x5x_Device_ReadInterrupts(&ir);
+            state.dev_ir = ir.word;
             printf("can_echo: received=%lu echoed=%lu busy=%lu err=%lu lost=%lu tec=%lu rec=%lu%s\n",
                    (unsigned long)state.received, (unsigned long)state.echoed, (unsigned long)state.send_busy,
                    (unsigned long)state.send_err, (unsigned long)state.rx_lost, (unsigned long)state.tx_errors,
