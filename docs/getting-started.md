@@ -70,6 +70,7 @@ picocom -b 115200 /dev/ttyACM0      # Linux; PuTTY on Windows
 | `commission` | [commissioning](../firmware/commission/README.md) over USB serial |
 | `rtos_demo` | the [FreeRTOS](../firmware/rtos/README.md) integration |
 | `tcan_probe` | the [TCAN4x5x driver](../firmware/drivers/tcan4x5x/README.md): reset, device ID, interrupt |
+| `can_tx_counter`, `can_echo` | CAN FD traffic between two boards: one sends a counter, the other echoes with ID + 1 |
 
 ## Give the board an address
 

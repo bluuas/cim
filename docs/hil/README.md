@@ -20,7 +20,7 @@ flowchart LR
         c["TARGET C (U3)"]
         can(["CAN bus<br/>2 × 120 Ω, J3"])
     end
-    psu["12 V supply<br/>J2 pins 23/24"]
+    psu["12 to 24 V supply<br/>J2 pins 23/24"]
     pi -- "SWD + BOOTSEL<br/>GPIO 16/26/21" --> a
     pi -- "SWD + BOOTSEL<br/>GPIO 13/6/19" --> b
     pi -- "SWD + BOOTSEL<br/>GPIO 23/27/22" --> c
@@ -48,7 +48,7 @@ When a slot's CIM is powered and idle, its SWDIO, SWCLK and BOOTSEL lines read h
 | Supply | JP1 | Use |
 |---|---|---|
 | Pi 5 V | bridged (default) | SWD only. The TCAN reports undervoltage (UVSUP) and does not enter Normal mode, so **no CAN**. |
-| 12 V on J2 | **open** | Everything, including CAN. |
+| 12 V to 24 V on J2 | **open** | Everything, including CAN. A 20 V USB-C PD adapter works. |
 
 ## Raspberry Pi setup
 
@@ -122,6 +122,12 @@ The runner then shows as *Idle* under Settings → Actions → Runners. To run t
 
 ## Known boards
 
-| Board | Status |
-|---|---|
-| proto v7 with defective hardware divider | **Do not use for tests.** Large divisions return wrong results, see #41. Check any board with the divider test in #41; a good chip prints `q=0x00022e09 r=0x00000001`, the defective one `q=0x00022fff r=0x0000e347`. Mark it physically. |
+The three proto v7 boards are assembled differently and each has a known fault. Positions as of 2026-10-11; do not swap them, the mezzanine connector is rated for 50 mating cycles.
+
+| Board | Assembly | Slot | State |
+|---|---|---|---|
+| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads | B | defective RP2040 hardware divider (#41): large divisions return wrong results, so no firmware tests; CAN, SWD and power are fine. A good chip prints `q=0x00022e09 r=0x00000001` in the divider test of #41, this one `q=0x00022fff r=0x0000e347`. |
+| "noUSB" | USB-C connector not populated | A | CAN broken on the board: never transmits, REC saturates with stuff errors, hears nothing from the bus; fault moved with the board between slots. Check J1 pins 11/12 and L40 to the TCAN bus pins. SWD and power fine. |
+| "full" | fully assembled, UID `E66208F4176B6B38` | C | SWD from the HAT fails (the DAP only answers WAIT), in slots A and C; check J1 pins 8/9. CAN untested. Flash over USB with picotool meanwhile. |
+
+All three faults are pairs of neighbouring J1 pins, which points at the mezzanine solder joints of the prototypes. Slot wiring for SWD and power is verified on all three slots.

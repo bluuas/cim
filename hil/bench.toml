@@ -1,20 +1,22 @@
 # What is in which slot of the HIL bench (docs/hil/README.md).
-# The runner (hil/runner) only runs tests on slots that are present and have
-# no known defects; the others are skipped with the reason given here.
+# present: reachable over SWD from the Pi. defect: the slot is skipped by
+# single-slot tests, with this reason. can = false: the board cannot take part
+# in CAN tests between slots (slot_pair fixture).
 
 [slots.a]
 openocd = "openocd/slot-a.cfg"
 board = "cim_proto_v7"
-present = false
-note = "board's +BATT path from the mezzanine is broken (#43)"
+present = true
+can = false   # CAN path broken on the board (J1 pins 11/12 or L40), see docs/hil/README.md
 
 [slots.b]
 openocd = "openocd/slot-b.cfg"
 board = "cim_proto_v7"
 present = true
+defect = "defective RP2040 hardware divider (#41)"
 
 [slots.c]
 openocd = "openocd/slot-c.cfg"
 board = "cim_proto_v7"
-present = true
-defect = "defective RP2040 hardware divider (#41)"
+present = false
+note = "board's SWD contact on J1 (pins 8/9) is broken; flash it over USB until resoldered"
