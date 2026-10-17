@@ -10,7 +10,7 @@ How work on CIM is organised: issues, branches, commits, pull requests.
    - The PR title follows [Conventional Commits](#commit-messages), because it becomes the commit message on `main`.
    - Put `Closes #<issue>` in the description.
    - Fill in the checklist: CI, hardware test, docs.
-4. **CI must pass.** Every PR builds the firmware for all boards, builds the docs site and runs the host and tool tests. `main` is protected and only accepts PRs that are up to date and green.
+4. **CI must pass.** Every PR builds the firmware for all boards, builds the docs site, runs the host and tool tests, checks the PR title against the commit rules below and rejects added binaries and files over 1 MiB. `main` is protected and only accepts PRs that are up to date and green.
 5. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards.
 
 Design decisions (e.g. protocols, architecture) are discussed in an issue labelled `decision` and recorded as an ADR in `docs/adr/`.
@@ -77,6 +77,8 @@ Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcomm
 
 Common scopes are `firmware`, `boards`, `tcan`, `bootloader`, `tools`, `hardware`, `docs` and `github`.
 
+- Keep the subject line at 72 characters or fewer.
+- Use the body to say why the change is made, not what it does: the diff shows what. Mention the alternative you rejected or the datasheet page you worked from.
 - Write the description in the imperative ("add", not "added"), in lowercase and without a trailing period.
 - Mark breaking changes with `!` after the type/scope, or with a `BREAKING CHANGE:` footer.
 - Reference issues in the footer: `Closes #12` or `Refs #12`.

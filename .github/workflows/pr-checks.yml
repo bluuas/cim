@@ -1,0 +1,48 @@
+name: pr-checks
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  # The PR title becomes the commit message on main, see CONTRIBUTING.md.
+  pr-title:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check the PR title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(feat|fix|docs|ci|build|refactor|test|perf|style|chore)(\([a-z0-9-]+\))?!?: [a-z0-9`].*[^.]$'
+          if [ "${#TITLE}" -gt 72 ] || ! [[ "$TITLE" =~ $pattern ]]; then
+            echo "::error::PR title '$TITLE' must be '<type>(<scope>): <description>', at most 72 characters, lowercase, without a trailing period"
+            exit 1
+          fi
+
+  # Binaries belong in releases, not in git.
+  no-binaries:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check added files
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          status=0
+          while IFS= read -r -d '' file; do
+            case "$file" in
+              *.elf|*.bin|*.uf2|*.hex|*.map|*.zip|*.o|*.a|*.so|*.exe)
+                echo "::error file=$file::build artifacts and binaries must not be committed"; status=1 ;;
+            esac
+            size=$(git cat-file -s "$HEAD:$file")
+            if [ "$size" -gt 1048576 ]; then
+              echo "::error file=$file::file is larger than 1 MiB ($size bytes)"; status=1
+            fi
+          done < <(git diff --diff-filter=A --name-only -z "$BASE...$HEAD")
+          exit $status
