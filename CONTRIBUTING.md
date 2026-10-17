@@ -20,7 +20,7 @@ Design decisions (e.g. protocols, architecture) are discussed in an issue labell
 Branch names follow [Conventional Branch](https://conventionalbranch.org/):
 
 ```
-<type>/issue-<number>-<short-description>
+<type>/<short-description>
 ```
 
 | Type                 | Use for                             |
@@ -36,7 +36,7 @@ Rules:
 - No consecutive, leading or trailing hyphens.
 - No underscores or spaces.
 
-Examples: `feat/issue-6-tcan-api`, `fix/issue-42-rx-overflow`, `chore/issue-24-contributing`.
+Examples: `feat/tcan-api`, `fix/rx-overflow`, `chore/contributing`.
 
 ## Commit messages
 
@@ -81,6 +81,35 @@ feat(bootloader)!: switch to new image header format
 BREAKING CHANGE: apps must be rebuilt with the new linker script.
 Closes #14
 ```
+
+## Releases
+
+Versions follow [Semantic Versioning](https://semver.org/) and are tagged `vMAJOR.MINOR.PATCH`, e.g. `v1.2.3`.
+
+| Part    | Increment for                                                  |
+|---------|----------------------------------------------------------------|
+| `MAJOR` | incompatible change to the hardware, the CAN protocol or the API, or dropping support for a board |
+| `MINOR` | new backward-compatible feature                                |
+| `PATCH` | bug fix without a new feature                                  |
+
+Rules:
+- Tag only after the change is merged into `main`.
+- Tags are annotated, with a one-line description.
+- A pushed tag is never moved or reused. If a release is wrong, publish the next `PATCH`.
+- Firmware binaries (`.uf2`, `.elf`) are release assets, never committed.
+- A tag with a suffix, e.g. `v1.2.0-rc.1`, is published as a pre-release.
+- Board revisions are numbered (`proto_v7`) and independent of the firmware version. Each release states the boards it supports.
+
+To cut a release:
+
+```bash
+git switch main && git pull
+git log --oneline -3          # check that the expected commits are there
+git tag -a v1.2.0 -m "v1.2.0 - short description"
+git push origin v1.2.0
+```
+
+The `release` workflow then checks that the tagged commit is on `main`, builds the release presets for all boards and publishes a GitHub release with one zip (`.uf2` and `.elf`) per board.
 
 ## Building and testing
 
