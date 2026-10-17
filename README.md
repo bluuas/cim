@@ -40,7 +40,7 @@ mkdocs serve
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow (issues, pull requests, CI) and the naming conventions for branches and commits.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow (issues, pull requests, CI) and [docs/conventions.md](docs/conventions.md) for the rules on branches, commits and releases.
 
 ## Acknowledgements
 

@@ -1,120 +1,23 @@
 # Contributing to CIM
 
-How work on CIM is organised: issues, branches, commits, pull requests.
+How work on CIM is organised. The rules behind it, with IDs you can cite in a review, are in [Conventions](docs/conventions.md).
 
 ## Workflow
 
 1. **Start from an issue.** Every change belongs to a GitHub issue. Pick an existing one or open a new one using a template (bug, task, or decision). Larger work is grouped into [milestones](https://github.com/bluuas/cim/milestones).
-2. **Create a branch** from `main` (see [Branch names](#branch-names)).
+2. **Create a branch** from `main`, named `<type>/<short-description>` ([GIT-02](docs/conventions.md#git-02-branches-are-named-typeshort-description-must)).
 3. **Open a pull request** against `main`:
-   - The PR title follows [Conventional Commits](#commit-messages), because it becomes the commit message on `main`.
+   - The title follows Conventional Commits, because it becomes the commit message on `main` ([GIT-04](docs/conventions.md#git-04-commit-messages-and-pr-titles-follow-conventional-commits-must)).
    - Put `Closes #<issue>` in the description.
    - Fill in the checklist: CI, hardware test, docs.
-4. **CI must pass.** Every PR builds the firmware for all boards, builds the docs site, runs the host and tool tests, checks the PR title against the commit rules below and rejects added binaries and files over 1 MiB. `main` is protected and only accepts PRs that are up to date and green.
+4. **CI must pass.** Every PR builds the firmware, builds the docs site, runs the host and tool tests, checks the title and rejects added binaries. `main` only accepts PRs that are up to date and green.
 5. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards.
 
 Design decisions (e.g. protocols, architecture) are discussed in an issue labelled `decision` and recorded as an ADR in `docs/adr/`.
 
-## Repository settings
+## Releasing
 
-`main` is protected by a branch protection rule:
-
-- Changes reach `main` only through a pull request, with a linear history. Squash merge is the only merge method, and merged branches are deleted.
-- Force-pushes to `main` and deleting it are blocked.
-- A PR must be up to date with `main`.
-- These checks must pass: `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7-release)`, `host-tests`, `consumer` and `tools-tests`.
-- No approving review is required, because the project has a single maintainer. Administrators can bypass the rule.
-
-The settings are changed under *Settings → Branches* on GitHub. Update this list when they change.
-
-## Branch names
-
-Branch names follow [Conventional Branch](https://conventionalbranch.org/):
-
-```
-<type>/<short-description>
-```
-
-| Type                 | Use for                             |
-|----------------------|-------------------------------------|
-| `feat/` or `feature/` | new features                        |
-| `fix/` or `bugfix/`   | bug fixes                           |
-| `hotfix/`            | urgent fixes                        |
-| `release/`           | release preparation, e.g. `release/v1.2.0` |
-| `chore/`             | everything else: docs, CI, tooling  |
-
-Rules:
-- Only lowercase `a-z`, `0-9` and hyphens. Dots are allowed only in release versions.
-- No consecutive, leading or trailing hyphens.
-- No underscores or spaces.
-
-Examples: `feat/tcan-api`, `fix/rx-overflow`, `chore/contributing`.
-
-## Commit messages
-
-Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
-
-```
-<type>(<optional scope>)!: <description>
-
-<optional body>
-
-<optional footer(s)>
-```
-
-| Type       | Use for                                          |
-|------------|--------------------------------------------------|
-| `feat`     | a new feature                                    |
-| `fix`      | a bug fix                                        |
-| `docs`     | documentation only                               |
-| `ci`       | CI configuration (GitHub Actions)                |
-| `build`    | build system, CMake, devcontainer, dependencies  |
-| `refactor` | code change that neither fixes a bug nor adds a feature |
-| `test`     | adding or fixing tests                           |
-| `perf`     | performance improvement                          |
-| `style`    | formatting, no code change                       |
-| `chore`    | anything else                                    |
-
-Common scopes are `firmware`, `boards`, `tcan`, `bootloader`, `tools`, `hardware`, `docs` and `github`.
-
-- Keep the subject line at 72 characters or fewer.
-- Use the body to say why the change is made, not what it does: the diff shows what. Mention the alternative you rejected or the datasheet page you worked from.
-- Write the description in the imperative ("add", not "added"), in lowercase and without a trailing period.
-- Mark breaking changes with `!` after the type/scope, or with a `BREAKING CHANGE:` footer.
-- Reference issues in the footer: `Closes #12` or `Refs #12`.
-
-Examples:
-
-```
-feat(tcan): add hardware ID filters
-fix(boards): correct red LED pin on proto v7
-docs: describe bench setup for CAN tests
-
-feat(bootloader)!: switch to new image header format
-
-BREAKING CHANGE: apps must be rebuilt with the new linker script.
-Closes #14
-```
-
-## Releases
-
-Versions follow [Semantic Versioning](https://semver.org/) and are tagged `vMAJOR.MINOR.PATCH`, e.g. `v1.2.3`.
-
-| Part    | Increment for                                                  |
-|---------|----------------------------------------------------------------|
-| `MAJOR` | incompatible change to the hardware, the CAN protocol or the API, or dropping support for a board |
-| `MINOR` | new backward-compatible feature                                |
-| `PATCH` | bug fix without a new feature                                  |
-
-Rules:
-- Tag only after the change is merged into `main`.
-- Tags are annotated, with a one-line description.
-- A pushed tag is never moved or reused. If a release is wrong, publish the next `PATCH`.
-- Firmware binaries (`.uf2`, `.elf`) are release assets, never committed.
-- A tag with a suffix, e.g. `v1.2.0-rc.1`, is published as a pre-release.
-- Board revisions are numbered (`proto_v7`) and independent of the firmware version. Each release states the boards it supports.
-
-To cut a release:
+Tag a commit that is already on `main`, using the next version ([REL-02](docs/conventions.md#rel-02-the-change-decides-which-part-is-incremented-must)):
 
 ```bash
 git switch main && git pull
@@ -123,7 +26,7 @@ git tag -a v1.2.0 -m "v1.2.0 - short description"
 git push origin v1.2.0
 ```
 
-The `release` workflow then checks that the tagged commit is on `main`, builds the release presets for all boards and publishes a GitHub release with one zip (`.uf2` and `.elf`) per board.
+The `release` workflow then checks that the tagged commit is on `main`, builds the release presets for all boards and publishes a GitHub release with one zip (`.uf2` and `.elf`) per board. A tag with a suffix such as `v1.2.0-rc.1` is published as a pre-release.
 
 ## Building and testing
 
@@ -131,13 +34,7 @@ See the [README](README.md#building) for building with the devcontainer. Firmwar
 
 ## Documentation
 
-Documentation lives next to the code: every module has a `README.md`, decisions are ADRs in `docs/adr/`, and cross-cutting pages are in `docs/`. The [documentation site](https://bluuas.github.io/cim/) is built from these files by mkdocs, see `mkdocs.yml`.
-
-- Write links relative to the repository, as on GitHub (e.g. `../config/README.md`). The site rewrites them: links to pages stay links, links to source files point to GitHub.
-- A new Markdown file outside `docs/` is added to `extra.repo_docs` and to `nav` in `mkdocs.yml`; a file inside `docs/` only to `nav`.
-- Draw diagrams as [Mermaid](https://mermaid.js.org/) code blocks, not as images.
-- Write notes as [GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) (`> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`); the site renders them as admonitions.
-- `mkdocs build --strict` runs in CI and fails on broken links. Preview with `mkdocs serve` (in the devcontainer, or after `pip install -r docs/requirements.txt`).
+Documentation lives next to the code: every module has a `README.md`, decisions are ADRs in `docs/adr/`, and cross-cutting pages are in `docs/`. The [documentation site](https://bluuas.github.io/cim/) is built from these files by mkdocs, see `mkdocs.yml`. The writing rules are `DOC-01` to `DOC-05` in [Conventions](docs/conventions.md).
 
 ## License
 

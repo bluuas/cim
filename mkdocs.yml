@@ -107,4 +107,6 @@ nav:
       - Overview: adr/README.md
       - "0001 PC to CAN link": adr/0001-pc-can-link.md
       - "0002 Device protocol": adr/0002-device-protocol.md
-  - Contributing: CONTRIBUTING.md
+  - Contributing:
+      - Workflow: CONTRIBUTING.md
+      - Conventions: conventions.md
