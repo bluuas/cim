@@ -3,3 +3,12 @@ temp/
 .vscode/
 __pycache__/
 .pytest_cache/
+
+# Firmware artifacts belong in releases, not in git
+*.elf
+*.bin
+*.map
+*.uf2
+*.hex
+
+.venv/
