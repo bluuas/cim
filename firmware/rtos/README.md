@@ -20,10 +20,9 @@ See [examples/rtos_demo](../examples/rtos_demo/main.c).
 
 | | |
 |---|---|
-| Source | [raspberrypi/FreeRTOS-Kernel](https://github.com/raspberrypi/FreeRTOS-Kernel), git submodule `FreeRTOS-Kernel` |
-| Version | V11.1.0+, commit `4f7299d` (the fork has no tags) |
-| Ports | `RP2040` (proto v7), `RP2350_ARM_NTZ` (v0), chosen from `PICO_PLATFORM` |
-| Why the fork | upstream FreeRTOS (V11.3.1) has the RP2040 port, but no RP2350 port yet |
+| Source | [FreeRTOS/FreeRTOS-Kernel](https://github.com/FreeRTOS/FreeRTOS-Kernel), git submodule `FreeRTOS-Kernel` |
+| Version | V11.3.1 |
+| Port | `RP2040` |
 
 After cloning: `git submodule update --init`.
 

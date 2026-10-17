@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
- * Outputs for cim/log.h on the RP2040/RP2350: USB CDC through pico_stdio and
+ * Outputs for cim/log.h on the RP2040: USB CDC through pico_stdio and
  * an RTT up-buffer.
  *
  * RTT ("Real Time Transfer") is a ring buffer in RAM that a debugger reads

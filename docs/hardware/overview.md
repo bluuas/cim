@@ -58,7 +58,7 @@ Details and pictures of v0 to v6 are in the thesis, chapter 6 (Hardware Implemen
 
 ## Datasheets and thesis
 
-- [RP2040 datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf) and [RP2350 datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)
+- [RP2040 datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)
 - [TCAN4551-Q1](https://www.ti.com/product/TCAN4551-Q1) product page and datasheet
 - [TLVM23615](https://www.ti.com/product/TLVM23615) product page and datasheet
 - The thesis, for the full component evaluation, the PCB stack-up, assembly and the measurements (power consumption, ripple, heat, SPI throughput) in chapter 8 (Testing and Validation).
