@@ -5,8 +5,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 CIM_CONFIG = Path(__file__).resolve().parents[2] / "tools" / "cim-config" / "cim_config_swd.py"
 
 # apps/example/app.c: struct { uint32_t beats, address, boot_count; int32_t config_err; } app_state
@@ -50,8 +48,6 @@ def test_example_app_boot_count_under_rtos(slot, firmware):
 
 def test_example_app_address_persists(slot, firmware):
     """Node address set over SWD (tools/cim-config) is used by the app after a reset."""
-    if not CIM_CONFIG.is_file():
-        pytest.skip(f"{CIM_CONFIG} not found")
     elf = firmware("example", subdir="apps")
     slot.flash(elf)
     before = app_state(slot, elf)["address"]
