@@ -76,8 +76,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          flags=""
-          case "$GITHUB_REF_NAME" in *-*) flags="--prerelease" ;; esac
+          flags="--latest"
+          case "$GITHUB_REF_NAME" in *-*) flags="--prerelease --latest=false" ;; esac
           gh release create "$GITHUB_REF_NAME" cim-*.zip \
             --verify-tag --generate-notes $flags \
             --title "$GITHUB_REF_NAME" \

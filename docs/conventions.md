@@ -95,6 +95,12 @@ The required checks are `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7
 
 *Why:* rewriting shared history breaks every other clone. *Enforced by:* branch protection on `main`.
 
+### GIT-12 Maintenance branches are created only when needed (SHOULD)
+
+There is no `develop` branch. When a fix must reach an older release line that someone depends on, create `release/vX.Y` from its last tag and tag the fix there as the next `PATCH`. Until then, all work happens on `main`.
+
+*Why:* a second long-lived branch only adds merge steps while nobody depends on an old line.
+
 ## History
 
 ### HIS-01 Build artifacts and binaries are not committed (MUST NOT)
@@ -123,6 +129,8 @@ For example `v1.2.3`. The `v` belongs to the tag, not to the version.
 | `MINOR` | new backward-compatible feature                                               |
 | `PATCH` | bug fix without a new feature                                                 |
 
+Before `v1.0.0`, a `MINOR` increment may also contain incompatible changes, and `v1.0.0` is released when the public interfaces are declared stable. The public interfaces are the CAN protocol, the headers under `firmware/*/include/cim/`, `cim_import.cmake` with `cim_add_app()`, and the format of the config store. Projects such as AMZ's use CIM as a submodule, so these are the contract.
+
 *Why:* the number answers "can I update without reflashing or changing the board?".
 
 ### REL-03 A tag is created only after the change is merged into `main` (MUST)
@@ -141,6 +149,46 @@ If a release is wrong, publish the next `PATCH`.
 
 For example `v1.2.0-rc.1`. *Enforced by:* the `release` workflow publishes it as a pre-release.
 
+### REL-07 Releases are built by CI from the tag, and report their version (MUST)
+
+Nothing is uploaded from a developer machine. Firmware reports the version stamped from `git describe`.
+
+*Why:* a board in the field is identified by what it reports, and a release must be reproducible from its tag alone.
+
+### REL-08 "Latest" is the newest stable release (MUST)
+
+A pre-release never takes the "Latest" badge. *Enforced by:* the `release` workflow.
+
+### REL-09 `v1.0.0` waits for the bootloader and the PC tools (MUST)
+
+Version `v1.0.0` is released only when the CAN FD bootloader and the flasher are shipped, the public interfaces are frozen and the AMZ migration guide exists.
+
+## Tracking
+
+### TRK-01 A milestone is a release version, named like its tag (MUST)
+
+For example `v0.2.0`. It closes when the tag is pushed, and issues left in it are the ones that slipped. Long-running work that does not ship in a version (`Backlog`, `HIL test bench`) is the only exception.
+
+*Why:* a milestone named after a tag finishes on something real.
+
+### TRK-02 A board spin is a parent issue with sub-issues, not a milestone (MUST)
+
+Fabrication dates and firmware dates move independently, and a sub-issue can still be part of a firmware milestone.
+
+### TRK-03 Labels are type and area only (MUST)
+
+Type: `bug`, `enhancement`, `documentation`, `question`. Area: `firmware`, `tools`, `docs`, `ci`, `hardware`, `hil`. `blocker` marks a bug that must be fixed before its milestone's release. Status and priority are fields of the GitHub project, never labels.
+
+*Why:* type and area never change as work progresses. State changes weekly, and a label and a field that mean the same thing disagree within a week.
+
+### TRK-04 A waiting item says what it waits on (MUST)
+
+Move an issue to `Waiting` only with a comment that names the blocker (a decision, another issue, a delivery). Otherwise it is `Todo`.
+
+### TRK-05 Each release has a checklist issue (SHOULD)
+
+The issue is titled `Release vX.Y.Z` and sits in that milestone.
+
 ## Boards
 
 ### BRD-01 Board revisions are numbered and independent of the firmware version (MUST)
@@ -156,6 +204,17 @@ Boards are named `proto_v7`, and the firmware has its own version (REL-01). The 
 *Why:* users of that board cannot update to the release.
 
 ## Documentation
+
+| You are writing | It goes to |
+|---|---|
+| How to build, flash, run or access something | README or `docs/` |
+| What a thing is: pinout, protocol, interfaces, compatibility | one reference page under `docs/` |
+| A rule | this page |
+| Why we decided something | a comment on the issue, or an ADR (DOC-07) |
+| A measurement, test report or bring-up result | a comment on the issue, with the data attached |
+| What changed | the commit or pull request |
+| What is still to do | an issue |
+| Board design files | the `cim-hardware` repository |
 
 ### DOC-01 Links are relative to the repository, as on GitHub (MUST)
 
@@ -174,3 +233,15 @@ Use `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!CAUTION]`; the sit
 ### DOC-05 The docs build without warnings (MUST)
 
 *Enforced by:* `mkdocs build --strict` in CI, which fails on broken links. Preview with `mkdocs serve` (in the devcontainer, or after `pip install -r docs/requirements.txt`).
+
+### DOC-06 Markdown holds what a reader needs again later (MUST)
+
+A file is a how-to, a reference, a rule or a concept page. Dated results go to the issue that owns the work, with the data attached. What changed goes to the commit or PR. What is still to do is an issue.
+
+### DOC-07 The file states the outcome, the issue holds the reasoning (MUST)
+
+Alternatives and trade-offs live in the issue comment, which the file links. Architecture-level decisions that other projects depend on (protocols, the bootloader, the PC link) are recorded as ADRs.
+
+### DOC-08 One fact has one home (MUST)
+
+Everywhere else links to it.
