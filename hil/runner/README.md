@@ -23,6 +23,7 @@ sequenceDiagram
 
 | Fixture | |
 |---|---|
+| `slot_pair` | two present slots on the shared CAN bus (not marked `can = false`), for tests between CIMs |
 | `slot` | `Slot` of a usable slot: `flash(elf)`, `reset()`, `read(addr, size)`, `read_var(elf, name, fmt)`, `wait_var(elf, name, fmt, predicate)`, `rtt_read(elf, seconds)` |
 | `firmware` | `firmware("config_counter")` returns `<firmware-dir>/examples/config_counter/config_counter.elf`; `firmware("example", subdir="apps")` an app |
 
@@ -55,4 +56,5 @@ Write the options as `--firmware-dir=PATH`. With a space (`--firmware-dir PATH`)
 | `test_tcan_probe.py` | `tcan_probe` | TCAN device ID over SPI, power-on interrupt on nINT (#5); VSUP state as JUnit property `vsup_ok` |
 | `test_log.py` | `log_demo` | log lines over RTT: format, levels (DEBUG compiled out), no lost lines (#10) |
 | `test_rtos.py` | `rtos_demo` | FreeRTOS: task rates, 1 kHz tick, `cim_delay_ms()` blocks instead of busy-waiting (#8) |
+| `test_can_echo.py` | `can_tx_counter` + `can_echo` | CAN FD between two slots: 10 000 frames of 64 bytes at 500 kbit/s / 2 Mbit/s echoed with ID + 1, no loss, no errors (#7); skipped without +BATT on J2 |
 | `test_example_app.py` | `apps/example` | template app: heartbeat, boot counter written to flash under FreeRTOS (+1 per reset), node address set over SWD (`tools/cim-config`) is used after a reset (#60, #11) |

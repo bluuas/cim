@@ -1,12 +1,13 @@
 # What is in which slot of the HIL bench (docs/hil/README.md).
-# The runner (hil/runner) only runs tests on slots that are present and have
-# no known defects; the others are skipped with the reason given here.
+# present: reachable over SWD from the Pi. defect: the slot is skipped by
+# single-slot tests, with this reason. can = false: the board cannot take part
+# in CAN tests between slots (slot_pair fixture).
 
 [slots.a]
 openocd = "openocd/slot-a.cfg"
 board = "cim_proto_v7"
 present = false
-note = "board's +BATT path from the mezzanine is broken (#43)"
+note = "no SWD connection: slot empty or contact fault, see docs/hil/README.md"
 
 [slots.b]
 openocd = "openocd/slot-b.cfg"

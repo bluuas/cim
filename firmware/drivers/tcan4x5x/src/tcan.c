@@ -466,4 +466,7 @@ void tcan_get_status(tcan_status_t *status)
     status->vsup_ok = !dev_ir.UVSUP;
     status->rx_lost = tcan.rx_lost;
     status->rx_overflows = tcan.rx_overflows;
+    /* reading PSR resets LEC and DLEC to 7 ("no change"), so each call reports the errors since the previous one */
+    status->last_error = psr & 0x7u;
+    status->last_data_error = (psr >> 8) & 0x7u;
 }

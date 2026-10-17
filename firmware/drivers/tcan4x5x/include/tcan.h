@@ -113,6 +113,9 @@ typedef struct {
     bool vsup_ok;           /**< no VSUP undervoltage */
     uint32_t rx_lost;       /**< frames lost because the TCAN RX FIFO was full */
     uint32_t rx_overflows;  /**< frames dropped because the RAM RX buffer was full */
+    uint8_t last_error;     /**< MCAN PSR.LEC since the previous call: 0 none, 1 stuff, 2 form, 3 ACK,
+                                 4 bit1, 5 bit0, 6 CRC, 7 no error since the previous call */
+    uint8_t last_data_error;/**< MCAN PSR.DLEC, same codes, for the CAN FD data phase */
 } tcan_status_t;
 
 /** Reset and configure the TCAN4x5x and switch it to Normal mode. */

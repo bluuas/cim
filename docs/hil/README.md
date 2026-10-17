@@ -20,7 +20,7 @@ flowchart LR
         c["TARGET C (U3)"]
         can(["CAN bus<br/>2 × 120 Ω, J3"])
     end
-    psu["12 V supply<br/>J2 pins 23/24"]
+    psu["12 to 24 V supply<br/>J2 pins 23/24"]
     pi -- "SWD + BOOTSEL<br/>GPIO 16/26/21" --> a
     pi -- "SWD + BOOTSEL<br/>GPIO 13/6/19" --> b
     pi -- "SWD + BOOTSEL<br/>GPIO 23/27/22" --> c
@@ -48,7 +48,7 @@ When a slot's CIM is powered and idle, its SWDIO, SWCLK and BOOTSEL lines read h
 | Supply | JP1 | Use |
 |---|---|---|
 | Pi 5 V | bridged (default) | SWD only. The TCAN reports undervoltage (UVSUP) and does not enter Normal mode, so **no CAN**. |
-| 12 V on J2 | **open** | Everything, including CAN. |
+| 12 V to 24 V on J2 | **open** | Everything, including CAN. A 20 V USB-C PD adapter works. |
 
 ## Raspberry Pi setup
 
@@ -122,6 +122,12 @@ The runner then shows as *Idle* under Settings → Actions → Runners. To run t
 
 ## Known boards
 
-| Board | Status |
-|---|---|
-| proto v7 with defective hardware divider | **Do not use for tests.** Large divisions return wrong results, see #41. Check any board with the divider test in #41; a good chip prints `q=0x00022e09 r=0x00000001`, the defective one `q=0x00022fff r=0x0000e347`. Mark it physically. |
+The three proto v7 boards are assembled differently and have a history of bad solder joints at the mezzanine connector J1. Positions as of 2026-10-17 (the boards were moved; slot A has no SWD connection, B and C work, and which of "full" and "noUSB" sits in A or B was not identified); do not swap them, the connector is rated for 50 mating cycles.
+
+| Board | Assembly | Slot | State |
+|---|---|---|---|
+| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads | C | defective RP2040 hardware divider (#41): large divisions return wrong results, so no firmware tests on it; CAN, SWD and power are fine. A good chip prints `q=0x00022e09 r=0x00000001` in the divider test of #41, this one `q=0x00022fff r=0x0000e347`. |
+| "full" | fully assembled, UID `E66208F4176B6B38` | A or B | +BATT and CAN verified after resoldering J1, SWD worked once in slot C. Since then its SWCLK line reads low in slots A and B while SWDIO and BOOTSEL read high, so J1 pin 9 is open again (the slots are fine: the "cut" board works in A). Before the resoldering, the +BATT path sagged under load (`tcan_init()` returned `TCAN_ERR_NO_VSUP` while the idle `tcan_probe` saw no undervoltage), SWD answered only WAIT, and CAN showed the stuck-stub signature below. |
+| "noUSB" | USB-C connector not populated | A or B | good after resoldering J1: SWD, VSUP and CAN verified. Before, its CAN showed the stuck-stub signature (never transmits, REC 127 with stuff errors, hears nothing) and later its SWD lines read low. |
+
+A board whose CANH/CANL do not reach the terminated bus (open J1 pins 11/12) drives only its own C51/C52; the line returns to recessive slower than one bit at 500 kbit/s, the node loses arbitration against its own SOF and then counts stuff errors as a receiver (TEC 0, REC 127). The TCAN's bus-fault flags do not show it.
