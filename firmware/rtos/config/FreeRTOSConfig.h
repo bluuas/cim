@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
- * FreeRTOS configuration for CIM applications (RP2040 and RP2350, ARM).
+ * FreeRTOS configuration for CIM applications (RP2040).
  *
  * An application can override the values marked "overridable" by defining
  * them in its app_config.h (found on the include path) or as compile
@@ -107,14 +107,6 @@
 /* SDK mutexes/semaphores and sleep_ms() cooperate with the scheduler */
 #define configSUPPORT_PICO_SYNC_INTEROP 1
 #define configSUPPORT_PICO_TIME_INTEROP 1
-
-#if PICO_RP2350
-#define configENABLE_MPU                     0
-#define configENABLE_TRUSTZONE               0
-#define configRUN_FREERTOS_SECURE_ONLY       1
-#define configENABLE_FPU                     1
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 16
-#endif
 
 /* --------------------------- optional functions --------------------------- */
 
