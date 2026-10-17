@@ -4,7 +4,7 @@ How work on CIM is organised. The rules behind it, with IDs you can cite in a re
 
 ## Workflow
 
-1. **Start from an issue.** Every change belongs to a GitHub issue. Pick an existing one or open a new one using a template (bug, task, or decision). Larger work is grouped into [milestones](https://github.com/bluuas/cim/milestones).
+1. **Start from an issue.** Every change belongs to a GitHub issue. Pick an existing one or open a new one using a template (bug, task, or decision). Work is grouped into [milestones](https://github.com/bluuas/cim/milestones) named like the release that ships it (`v0.2.0`), and board spins are parent issues ([TRK-01](docs/conventions.md#trk-01-a-milestone-is-a-release-version-named-like-its-tag-must), [TRK-02](docs/conventions.md#trk-02-a-board-spin-is-a-parent-issue-with-sub-issues-not-a-milestone-must)).
 2. **Create a branch** from `main`, named `<type>/<short-description>` ([GIT-02](docs/conventions.md#git-02-branches-are-named-typeshort-description-must)).
 3. **Open a pull request** against `main`:
    - The title follows Conventional Commits, because it becomes the commit message on `main` ([GIT-04](docs/conventions.md#git-04-commit-messages-and-pr-titles-follow-conventional-commits-must)).
@@ -17,7 +17,7 @@ Design decisions (e.g. protocols, architecture) are discussed in an issue labell
 
 ## Releasing
 
-Tag a commit that is already on `main`, using the next version ([REL-02](docs/conventions.md#rel-02-the-change-decides-which-part-is-incremented-must)):
+Each release has a `Release vX.Y.Z` checklist issue in its milestone. Tag a commit that is already on `main`, using the next version ([REL-02](docs/conventions.md#rel-02-the-change-decides-which-part-is-incremented-must)):
 
 ```bash
 git switch main && git pull
@@ -34,7 +34,7 @@ See the [README](README.md#building) for building with the devcontainer. Firmwar
 
 ## Documentation
 
-Documentation lives next to the code: every module has a `README.md`, decisions are ADRs in `docs/adr/`, and cross-cutting pages are in `docs/`. The [documentation site](https://bluuas.github.io/cim/) is built from these files by mkdocs, see `mkdocs.yml`. The writing rules are `DOC-01` to `DOC-05` in [Conventions](docs/conventions.md).
+Documentation lives next to the code: every module has a `README.md`, decisions are ADRs in `docs/adr/`, and cross-cutting pages are in `docs/`. The [documentation site](https://bluuas.github.io/cim/) is built from these files by mkdocs, see `mkdocs.yml`. The writing rules are `DOC-01` to `DOC-08` in [Conventions](docs/conventions.md).
 
 ## License
 

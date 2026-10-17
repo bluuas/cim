@@ -85,6 +85,7 @@ nav:
   - Hardware:
       - Overview: hardware/overview.md
       - Pinout: hardware/pinout.md
+      - Compatibility: hardware/compatibility.md
   - Firmware:
       - Architecture: firmware/architecture.md
       - TCAN4x5x driver: firmware/drivers/tcan4x5x/README.md
