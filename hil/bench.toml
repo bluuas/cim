@@ -7,7 +7,7 @@
 openocd = "openocd/slot-a.cfg"
 board = "cim_proto_v7"
 present = false
-note = "no SWD connection: slot empty or contact fault, see docs/hil/README.md"
+note = "board \"full\" does not connect over SWD, see docs/hil/README.md"
 
 [slots.b]
 openocd = "openocd/slot-b.cfg"
