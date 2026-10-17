@@ -37,7 +37,7 @@ macro(cim_init)
 
     add_compile_options(-Wall -Wextra)
 
-    foreach(_cim_lib util hal config log rtos commission drivers)
+    foreach(_cim_lib util version hal config log rtos commission drivers)
         add_subdirectory(${CIM_FIRMWARE_DIR}/${_cim_lib} ${CMAKE_BINARY_DIR}/cim/${_cim_lib})
     endforeach()
 endmacro()
@@ -65,6 +65,7 @@ function(cim_add_app name)
         pico_stdlib
         cim_hal
         cim_util
+        cim_version
         cim_config
         cim_log
         cim_commission

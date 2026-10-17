@@ -16,6 +16,7 @@
 #include "app.h"
 #include "app_config.h"
 #include "cim/log.h"
+#include "cim/version.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -101,7 +102,7 @@ void app_run(void)
     cim_gpio_init_out(CIM_LED_B_PIN, CIM_LED_ACTIVE_LOW);
     led(false, false, false);
 
-    CIM_LOG_INFO("%s %s starting", APP_NAME, APP_VERSION);
+    CIM_LOG_INFO("%s %s starting, CIM %s", APP_NAME, APP_VERSION, cim_version);
     xTaskCreate(app_task, "app", 2 * configMINIMAL_STACK_SIZE, NULL, APP_TASK_PRIORITY, NULL);
     xTaskCreate(commission_task, "commission", 2 * configMINIMAL_STACK_SIZE, NULL, APP_COMMISSION_PRIORITY, NULL);
     vTaskStartScheduler();

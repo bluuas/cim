@@ -12,6 +12,7 @@
 
 #include "cim/commission.h"
 #include "cim/config.h"
+#include "cim/version.h"
 
 /* Return the next word of *s (NUL-terminated in place) and advance *s. */
 static char *next_word(char **s)
@@ -119,10 +120,12 @@ void cim_commission_execute(const char *line, char *out, size_t out_len)
         out[0] = '\0';
     } else if (strcmp(cmd, "help") == 0) {
         snprintf(out, out_len,
-                 "ok commands: info, uid, get address, set address <%u..%u>, get name, set name <text>, reboot [bootsel]",
+                 "ok commands: info, version, uid, get address, set address <%u..%u>, get name, set name <text>, reboot [bootsel]",
                  CIM_COMMISSION_ADDRESS_MIN, CIM_COMMISSION_ADDRESS_MAX);
     } else if (strcmp(cmd, "info") == 0) {
         cmd_info(out, out_len);
+    } else if (strcmp(cmd, "version") == 0) {
+        snprintf(out, out_len, "ok version=%s", cim_version);
     } else if (strcmp(cmd, "uid") == 0) {
         char hex[17];
         uid_hex(hex);
