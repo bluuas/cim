@@ -95,25 +95,25 @@ The required checks are `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7
 
 *Why:* rewriting shared history breaks every other clone. *Enforced by:* branch protection on `main`.
 
-### GIT-14 Branches without a purpose are deleted (SHOULD)
-
-A branch whose PR is merged or closed is deleted locally and on GitHub. A branch without an open PR and without a commit for 30 days is deleted too; if the work is still wanted, it becomes an issue. Run `git fetch --prune` and `git branch -vv` to find leftovers.
-
-*Why:* old branches hide which work is alive, and they carry stale history that no longer matches `main`.
-
 ### GIT-12 Maintenance branches are created only when needed (SHOULD)
 
 There is no `develop` branch. When a fix must reach an older release line that someone depends on, create `release/vX.Y` from its last tag and tag the fix there as the next `PATCH`. Until then, all work happens on `main`.
 
 *Why:* a second long-lived branch only adds merge steps while nobody depends on an old line.
 
-## History
-
 ### GIT-13 A PR covers one topic and is not stacked on another (SHOULD)
 
 Changes that depend on each other go into one PR.
 
 *Why:* every squash merge of a base PR forces a rebase of the PRs above it, and a mistake in one leaks into the others.
+
+### GIT-14 Branches without a purpose are deleted (SHOULD)
+
+A branch whose PR is merged or closed is deleted locally and on GitHub. A branch without an open PR and without a commit for 30 days is deleted too; if the work is still wanted, it becomes an issue. Run `git fetch --prune` and `git branch -vv` to find leftovers.
+
+*Why:* old branches hide which work is alive, and they carry stale history that no longer matches `main`.
+
+## History
 
 ### HIS-01 Build artifacts and binaries are not committed (MUST NOT)
 
@@ -244,11 +244,11 @@ Use `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!CAUTION]`; the sit
 
 ### DOC-05 The docs build without warnings (MUST)
 
-*Enforced by:* `mkdocs build --strict` in CI, which fails on broken links. Preview with `mkdocs serve` (in the devcontainer, or after `pip install -r docs/requirements.txt`).
+*Enforced by:* `mkdocs build --strict` in CI, which fails on broken links.
 
 ### DOC-06 Markdown holds what a reader needs again later (MUST)
 
-A file is a how-to, a reference, a rule or a concept page. Dated results go to the issue that owns the work, with the data attached. What changed goes to the commit or PR. What is still to do is an issue.
+A file is a how-to, a reference, a rule or a concept page; the table above says where everything else goes.
 
 ### DOC-07 The file states the outcome, the issue holds the reasoning (MUST)
 

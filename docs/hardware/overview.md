@@ -22,11 +22,7 @@ flowchart LR
 
 ## Board
 
-| Board | MCU | Flash | CAD | `PICO_BOARD` |
-|---|---|---|---|---|
-| CIM prototype v7 | RP2040 | W25Q16JV, 2 MB external | KiCad | `cim_proto_v7` |
-
-The design files are in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware) (`cim-pcb-prototype-v7/`), together with the shared KiCad library and the Raspberry Pi HAT of the [HIL test bench](../hil/README.md).
+CIM prototype v7, `PICO_BOARD=cim_proto_v7` ([Compatibility](compatibility.md)). The design files are in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware) (`cim-pcb-prototype-v7/`), together with the shared KiCad library and the Raspberry Pi HAT of the [HIL test bench](../hil/README.md).
 
 ## Components and why they were chosen
 
@@ -40,7 +36,7 @@ The design files are in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/
 
 **Power over USB.** `+BATT` and USB VBUS are diode-ORed, so a board runs from USB alone for flashing and development. Without `+BATT` the CAN controller reports undervoltage and does not enter normal mode, see [Getting started](../getting-started.md#what-you-need).
 
-**Mezzanine connector.** An Amphenol Bergstak 10132798-021100LF, 20 pins at 0.5 mm pitch, on the bottom side. Its pin assignment follows the must-have list from the thesis: supply, CAN, eight GPIOs of which four have ADC, SWD, 3.3 V out, and USB plus BOOTSEL as nice-to-have. [^thesis-conn] See [Pinout](pinout.md).
+**Mezzanine connector.** Its pin assignment follows the must-have list from the thesis: supply, CAN, eight GPIOs of which four have ADC, SWD, 3.3 V out, and USB plus BOOTSEL as nice-to-have. [^thesis-conn] See [Pinout](pinout.md).
 
 ## Design history
 

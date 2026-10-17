@@ -6,7 +6,7 @@ Where CIM comes from, what it has to do, and where to read more.
 
 A Formula Student car has a central VCU and dozens of small peripherals in the wire harness: pedal sensors, fans, displays, valves. Each of them needs a microcontroller and a bus connection, and the data they exchange keeps growing. The classic CAN 2.0 bus with 8-byte frames at 1 Mbit/s reached its limit in AMZ's cars, and the previous Mini CAN Module had no way to be updated in the car. [^thesis-intro]
 
-CIM is one small board with CAN FD, a capable MCU and the common sensor and actuator interfaces, flashable over the bus. Everything application-specific goes on a carrier board under it.
+CIM is one small board with CAN FD, an MCU and the common sensor and actuator interfaces, flashable over the bus. Everything application-specific goes on a carrier board under it.
 
 CAN FD keeps the CAN bus but allows up to 64 bytes per frame and a faster bit rate for the data phase, up to 8 Mbit/s with the TCAN4551. For the protocol see [CAN in Automation](https://www.can-cia.org/can-knowledge/can-fd); for the MCUs the datasheets under [Hardware overview](hardware/overview.md#datasheets-and-thesis).
 
@@ -32,7 +32,7 @@ CIM was designed and built as the master's thesis *CAN FD Interface Module* by L
 > The CAN FD Interface Module is a modular and compact printed circuit board with open-source hardware and software. It improves data communication in automotive and robotics systems by supporting the CAN FD protocol, the successor of the CAN 2.0 protocol. The module uses the RP2040 microcontroller and TCAN4551 CAN controller and forms the interface between CAN FD and various sensors and actuators. To simplify the software deployment, it supports software updates over a CAN FD bootloader. Testing results show that the module reliably handles data communication at a data bit rate of 8 Mbit/s, can be easily updated via CAN FD bootloader and is universally applicable in customized systems.
 
 > [!NOTE]
-> The thesis PDF will be added to this documentation. Until then, the pages on this site cite it by chapter and section title.
+> The thesis PDF will be added to this documentation ([#89](https://github.com/bluuas/cim/issues/89)). Until then, the pages on this site cite it by chapter and section title.
 
 The thesis is the background for this site, not a part of it. The table says which chapters this site distils and which stay in the thesis only.
 

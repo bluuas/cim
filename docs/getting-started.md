@@ -1,10 +1,10 @@
 # Getting started
 
-From a clone to a CIM that blinks, talks over USB and has a node address. Then: [write an application](../firmware/apps/README.md).
+From a clone to a CIM that blinks, talks over USB and has a node address.
 
 ## What you need
 
-- A CIM board, a CIM prototype v7 board (see [Hardware overview](hardware/overview.md)). USB-C powers the board and is enough for everything on this page.
+- A CIM prototype v7 board ([Hardware overview](hardware/overview.md)). USB-C powers it and is enough for everything on this page.
 - For CAN: a supply on `+BATT` through the mezzanine connector (12 V on the bench, the 24 V LV system in the car). Over USB alone the CAN controller reports undervoltage and stays off.
 - Optional: a debug probe (CMSIS-DAP) on the SWD pads, or the [HIL test bench](hil/README.md).
 
