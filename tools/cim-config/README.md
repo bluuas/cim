@@ -17,7 +17,7 @@ It implements the same image format as the firmware ([firmware/config](../../fir
 ./cim_config_swd.py set-name pedalbox
 ```
 
-The firmware reads the configuration on every access, so running firmware sees the change immediately.
+Every command halts the board to read the flash and restarts it afterwards, so running firmware sees the change after the restart.
 
 On the HIL Pi, pass the slot's OpenOCD config:
 

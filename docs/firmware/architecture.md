@@ -31,7 +31,7 @@ flowchart TB
 | `commission` | `cim_commission` | `cim/commission.h` | line commands over USB serial to set address and name, read the UID, reboot ([details](../../firmware/commission/README.md)) |
 | `drivers/tcan4x5x` | `cim_tcan4x5x` | `tcan.h` | CAN FD driver: TI's register layer under `ti/`, CIM's API on top ([details](../../firmware/drivers/tcan4x5x/README.md)) |
 | `rtos` | `cim_rtos` | | FreeRTOS kernel as submodule, shared `FreeRTOSConfig.h`, hooks, and a task-friendly `cim_delay_ms()` ([details](../../firmware/rtos/README.md)) |
-| `boards` | | `cim_pins.h` | pin definitions shared by both boards, selected with `PICO_BOARD` |
+| `boards` | | `cim_pins.h` | pin definitions, selected with `PICO_BOARD` |
 
 Rules:
 

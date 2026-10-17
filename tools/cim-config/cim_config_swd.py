@@ -76,9 +76,16 @@ def newest(images):
     for i, img in enumerate(images):
         if img is None:
             continue
-        if best is None or ((img.seq - images[best].seq) & 0xFFFFFFFF) - (1 << 31) < 0 and img.seq != images[best].seq:
+        if best is None or 0 < (img.seq - images[best].seq) % (1 << 32) < (1 << 31):
             best = i
     return best
+
+
+def next_image(images, cur):
+    """The image to write: one sequence number above the newest, with its records."""
+    if cur is None:
+        return Image(1)
+    return Image((images[cur].seq + 1) & 0xFFFFFFFF, images[cur].records)
 
 
 def describe(key, value):
@@ -110,7 +117,7 @@ class OpenOcd:
     def read(self, address, size):
         with tempfile.TemporaryDirectory() as d:
             path = Path(d) / "dump.bin"
-            self.run("init", "reset halt", f"dump_image {path} 0x{address:08X} {size}")
+            self.run("init", "reset halt", f"dump_image {path} 0x{address:08X} {size}", "reset run")
             return path.read_bytes()
 
     def write_sector(self, address, data):
@@ -163,7 +170,7 @@ def main():
             sys.exit("name must be 1..32 printable characters")
         key = KEY_NAME
 
-    img = Image(images[cur].seq + 1 if cur is not None else 1, images[cur].records if cur is not None else {})
+    img = next_image(images, cur)
     img.records[key] = value
     target = 0 if cur is None else 1 - cur
     ocd.write_sector(base + target * SECTOR_SIZE, img.encode())

@@ -10,10 +10,10 @@ How work on CIM is organised. The rules behind it, with IDs you can cite in a re
    - The title follows Conventional Commits, because it becomes the commit message on `main` ([GIT-04](docs/conventions.md#git-04-commit-messages-and-pr-titles-follow-conventional-commits-must)).
    - Put `Closes #<issue>` in the description if there is an issue.
    - For firmware changes, state the board you tested on.
-4. **CI must pass.** Every PR builds the firmware, builds the docs site, runs the host and tool tests, checks the title and rejects added binaries. `main` only accepts PRs that are up to date and green.
+4. **CI must pass.** Every PR builds the firmware and the consumer project, builds the docs site, runs the host and tool tests, checks the title and rejects added binaries. `main` only accepts PRs that are up to date and green.
 5. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards. Auto-merge merges the PR as soon as the required checks pass.
 
-Design decisions (e.g. protocols, architecture) are discussed in an issue labelled `decision` and recorded as an ADR in `docs/adr/`.
+Design decisions are recorded as [ADRs](docs/adr/README.md).
 
 ## Releasing
 
@@ -30,11 +30,11 @@ The `release` workflow then checks that the tagged commit is on `main`, builds t
 
 ## Building and testing
 
-See the [README](README.md#building) for building with the devcontainer. Firmware changes should be tested on real hardware where possible. State the board you used in the PR checklist.
+Build: [README](README.md#building). Test firmware changes on hardware where possible.
 
 ## Documentation
 
-Documentation lives next to the code: every module has a `README.md`, decisions are ADRs in `docs/adr/`, and cross-cutting pages are in `docs/`. The [documentation site](https://bluuas.github.io/cim/) is built from these files by mkdocs, see `mkdocs.yml`. The writing rules are `DOC-01` to `DOC-08` in [Conventions](docs/conventions.md).
+Documentation lives next to the code: every module has a `README.md`, decisions are ADRs in `docs/adr/`, cross-cutting pages are in `docs/`. Writing rules: `DOC-01` to `DOC-08` in [Conventions](docs/conventions.md).
 
 ## License
 
