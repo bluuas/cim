@@ -59,3 +59,4 @@ Version 1 (*CAN Shell*) had flaws that showed in the car; [ADR 0002](../adr/0002
 
 [^thesis-bl]: L. Betschart, *CAN FD Interface Module*, master's thesis, HSLU, 2024. Chapter 5 (Architecture & Design), *CAN FD Bootloader Architecture* with *Main Concept* and *Bootloader Stages*. See [Background](../background.md#the-masters-thesis) for the PDF.
 [^thesis-linker]: Thesis, chapter 7 (Software Implementation), *CAN FD Bootloader*, section *Memory and Linker Script*.
+[^adr2]: [ADR 0002: Device and bootloader protocol](../adr/0002-device-protocol.md), sections *Context* and *Decision*.
