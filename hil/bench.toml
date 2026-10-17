@@ -6,14 +6,14 @@
 [slots.a]
 openocd = "openocd/slot-a.cfg"
 board = "cim_proto_v7"
-present = false
-note = "board not reachable over SWD (unpowered or not seated), see docs/hil/README.md"
+present = true
+defect = "defective RP2040 hardware divider (#41)"
 
 [slots.b]
 openocd = "openocd/slot-b.cfg"
 board = "cim_proto_v7"
-present = true
-defect = "defective RP2040 hardware divider (#41)"
+present = false
+note = "board's SWCLK (J1 pin 9) does not reach the slot, see docs/hil/README.md"
 
 [slots.c]
 openocd = "openocd/slot-c.cfg"
