@@ -52,4 +52,4 @@ GPIO 0 is not connected and GPIO 1 belongs to the TCAN, so there is no default U
 
 ## LED colours in the examples
 
-The firmware uses the LED consistently: blinking red means not commissioned, green means running, yellow means a missing supply on the CAN controller, red means failure. Each example's `main.c` states its own mapping.
+Blinking red: not commissioned. Green: running. Yellow: no supply on the CAN controller. Red: failure. Each example's `main.c` states its own mapping.
