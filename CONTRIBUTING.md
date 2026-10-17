@@ -82,6 +82,31 @@ BREAKING CHANGE: apps must be rebuilt with the new linker script.
 Closes #14
 ```
 
+## Releases
+
+Versions follow [Semantic Versioning](https://semver.org/) and are tagged `vMAJOR.MINOR.PATCH`, e.g. `v1.2.3`.
+
+| Part    | Increment for                                                  |
+|---------|----------------------------------------------------------------|
+| `MAJOR` | incompatible change to the hardware, the CAN protocol or the API |
+| `MINOR` | new backward-compatible feature                                |
+| `PATCH` | bug fix without a new feature                                  |
+
+Rules:
+- Tag only after the change is merged into `main`.
+- Tags are annotated, with a one-line description.
+- A pushed tag is never moved or reused. If a release is wrong, publish the next `PATCH`.
+- Firmware binaries (`.uf2`, `.elf`) are release assets, never committed.
+
+To cut a release:
+
+```bash
+git switch main && git pull
+git log --oneline -3          # check that the expected commits are there
+git tag -a v1.2.0 -m "v1.2.0 - short description"
+git push origin v1.2.0
+```
+
 ## Building and testing
 
 See the [README](README.md#building) for building with the devcontainer. Firmware changes should be tested on real hardware where possible. State the board you used in the PR checklist.
