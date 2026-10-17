@@ -75,11 +75,11 @@ feat(bootloader)!: switch to new image header format
 BREAKING CHANGE: apps must be rebuilt with the new linker script.
 ```
 
-### GIT-08 Every PR closes or references an issue (MUST)
+### GIT-08 A PR references its issue when there is one (SHOULD)
 
-Put `Closes #<issue>` in the PR description, or `Refs #<issue>` if the issue stays open.
+Features, bug fixes and decisions belong to an issue: put `Closes #<issue>` in the PR description, or `Refs #<issue>` if the issue stays open. Documentation, CI and housekeeping changes need no issue.
 
-*Why:* the issue holds the discussion and the milestone; the PR holds the change.
+*Why:* the issue holds the discussion and the milestone; a typo fix has neither.
 
 ### GIT-09 PRs are squash merged (MUST)
 
@@ -102,6 +102,12 @@ There is no `develop` branch. When a fix must reach an older release line that s
 *Why:* a second long-lived branch only adds merge steps while nobody depends on an old line.
 
 ## History
+
+### GIT-13 A PR covers one topic and is not stacked on another (SHOULD)
+
+Changes that depend on each other go into one PR.
+
+*Why:* every squash merge of a base PR forces a rebase of the PRs above it, and a mistake in one leaks into the others.
 
 ### HIS-01 Build artifacts and binaries are not committed (MUST NOT)
 

@@ -4,14 +4,14 @@ How work on CIM is organised. The rules behind it, with IDs you can cite in a re
 
 ## Workflow
 
-1. **Start from an issue.** Every change belongs to a GitHub issue. Pick an existing one or open a new one using a template (bug, task, or decision). Work is grouped into [milestones](https://github.com/bluuas/cim/milestones) named like the release that ships it (`v0.2.0`), and board spins are parent issues ([TRK-01](docs/conventions.md#trk-01-a-milestone-is-a-release-version-named-like-its-tag-must), [TRK-02](docs/conventions.md#trk-02-a-board-spin-is-a-parent-issue-with-sub-issues-not-a-milestone-must)).
+1. **Start from an issue for features, bug fixes and decisions.** Pick an existing one or open a new one using a template (bug, task, or decision). Work is grouped into [milestones](https://github.com/bluuas/cim/milestones) named like the release that ships it (`v0.2.0`), and board spins are parent issues ([TRK-01](docs/conventions.md#trk-01-a-milestone-is-a-release-version-named-like-its-tag-must), [TRK-02](docs/conventions.md#trk-02-a-board-spin-is-a-parent-issue-with-sub-issues-not-a-milestone-must)). Documentation, CI and housekeeping changes need no issue.
 2. **Create a branch** from `main`, named `<type>/<short-description>` ([GIT-02](docs/conventions.md#git-02-branches-are-named-typeshort-description-must)).
 3. **Open a pull request** against `main`:
    - The title follows Conventional Commits, because it becomes the commit message on `main` ([GIT-04](docs/conventions.md#git-04-commit-messages-and-pr-titles-follow-conventional-commits-must)).
-   - Put `Closes #<issue>` in the description.
-   - Fill in the checklist: CI, hardware test, docs.
+   - Put `Closes #<issue>` in the description if there is an issue.
+   - For firmware changes, state the board you tested on.
 4. **CI must pass.** Every PR builds the firmware, builds the docs site, runs the host and tool tests, checks the title and rejects added binaries. `main` only accepts PRs that are up to date and green.
-5. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards.
+5. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards. Auto-merge merges the PR as soon as the required checks pass.
 
 Design decisions (e.g. protocols, architecture) are discussed in an issue labelled `decision` and recorded as an ADR in `docs/adr/`.
 
