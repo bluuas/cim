@@ -20,7 +20,7 @@ Design decisions (e.g. protocols, architecture) are discussed in an issue labell
 Branch names follow [Conventional Branch](https://conventionalbranch.org/):
 
 ```
-<type>/issue-<number>-<short-description>
+<type>/<short-description>
 ```
 
 | Type                 | Use for                             |
@@ -36,7 +36,7 @@ Rules:
 - No consecutive, leading or trailing hyphens.
 - No underscores or spaces.
 
-Examples: `feat/issue-6-tcan-api`, `fix/issue-42-rx-overflow`, `chore/issue-24-contributing`.
+Examples: `feat/tcan-api`, `fix/rx-overflow`, `chore/contributing`.
 
 ## Commit messages
 
