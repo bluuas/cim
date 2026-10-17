@@ -87,7 +87,7 @@ Put `Closes #<issue>` in the PR description, or `Refs #<issue>` if the issue sta
 
 ### GIT-10 A PR is up to date and green before it is merged (MUST)
 
-The required checks are `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7-release)`, `host-tests`, `consumer` and `tools-tests`.
+The required checks are `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7-release)`, `host-tests`, `consumer`, `tools-tests`, `pr-title` and `no-binaries`.
 
 *Enforced by:* branch protection on `main`.
 
