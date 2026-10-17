@@ -95,6 +95,12 @@ The required checks are `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7
 
 *Why:* rewriting shared history breaks every other clone. *Enforced by:* branch protection on `main`.
 
+### GIT-14 Branches without a purpose are deleted (SHOULD)
+
+A branch whose PR is merged or closed is deleted locally and on GitHub. A branch without an open PR and without a commit for 30 days is deleted too; if the work is still wanted, it becomes an issue. Run `git fetch --prune` and `git branch -vv` to find leftovers.
+
+*Why:* old branches hide which work is alive, and they carry stale history that no longer matches `main`.
+
 ### GIT-12 Maintenance branches are created only when needed (SHOULD)
 
 There is no `develop` branch. When a fix must reach an older release line that someone depends on, create `release/vX.Y` from its last tag and tag the fix there as the next `PATCH`. Until then, all work happens on `main`.
