@@ -15,6 +15,18 @@ How work on CIM is organised: issues, branches, commits, pull requests.
 
 Design decisions (e.g. protocols, architecture) are discussed in an issue labelled `decision` and recorded as an ADR in `docs/adr/`.
 
+## Repository settings
+
+`main` is protected by a branch protection rule:
+
+- Changes reach `main` only through a pull request, with a linear history. Squash merge is the only merge method, and merged branches are deleted.
+- Force-pushes to `main` and deleting it are blocked.
+- A PR must be up to date with `main`.
+- These checks must pass: `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7-release)` and `host-tests`.
+- No approving review is required, because the project has a single maintainer. Administrators can bypass the rule.
+
+The settings are changed under *Settings → Branches* on GitHub. Update this list when they change.
+
 ## Branch names
 
 Branch names follow [Conventional Branch](https://conventionalbranch.org/):
