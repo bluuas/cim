@@ -8,6 +8,7 @@ target_include_directories(cim_commission PUBLIC include)
 
 target_link_libraries(cim_commission PUBLIC
     cim_config
+    cim_version
     hardware_watchdog
     pico_bootrom
     pico_stdlib

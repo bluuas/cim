@@ -41,6 +41,11 @@ static const char *run(const char *line)
 
 #define CHECK_OUT(line, expected) CHECK(strcmp(run(line), expected) == 0 || (printf("  got: '%s'\n", out), 0))
 
+static void test_version(void)
+{
+    CHECK_OUT("version", "ok version=v1.2.3-test");
+}
+
 static void test_info_unconfigured(void)
 {
     flash_mock_reset();
@@ -91,6 +96,7 @@ static void test_errors_and_misc(void)
 
 int main(void)
 {
+    RUN(test_version);
     RUN(test_info_unconfigured);
     RUN(test_set_address);
     RUN(test_set_name);

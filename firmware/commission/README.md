@@ -30,6 +30,7 @@ Connect the CIM over USB and open its serial port with any terminal (e.g. `picoc
 |---|---|
 | `help` | list of commands |
 | `info` | `ok address=5 name=pedalbox uid=E6614103E7452D2F` |
+| `version` | `ok version=v0.1.0` (the CIM platform version, from `git describe`) |
 | `uid` | `ok uid=E6614103E7452D2F` (64-bit flash unique ID) |
 | `get address` | `ok address=5` (0: not configured) |
 | `set address <1..239>` | `ok address=5` |

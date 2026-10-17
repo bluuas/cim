@@ -24,6 +24,7 @@ extra:
     - firmware/drivers/tcan4x5x/README.md
     - firmware/log/README.md
     - firmware/rtos/README.md
+    - firmware/version/README.md
     - hil/openocd/README.md
     - hil/runner/README.md
     - hil/status-display/README.md
@@ -93,6 +94,7 @@ nav:
       - Logging: firmware/log/README.md
       - FreeRTOS: firmware/rtos/README.md
       - Commissioning: firmware/commission/README.md
+      - Version: firmware/version/README.md
   - Protocol:
       - CIM protocol: protocol/cim-protocol.md
       - Bootloader concept: protocol/bootloader.md

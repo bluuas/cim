@@ -12,6 +12,9 @@ apps/<name>/
 
 [`example/`](example/) is the template: copy it, rename it and add it to `apps/CMakeLists.txt`.
 
+
+Every app links `cim_version`. Its `cim_version` string (`cim/version.h`) is the version of the CIM platform, see [Version](../version/README.md). The app's own `APP_VERSION` is separate; the example logs both at startup.
+
 ## cim_add_app()
 
 ```cmake
