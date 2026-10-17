@@ -16,7 +16,7 @@ flowchart TB
         util["util<br/>CRC-32"]
     end
     sdk["Pico SDK 2.1+ and FreeRTOS kernel"]
-    hw["RP2040 / RP2354A, TCAN4551, flash"]
+    hw["RP2040, TCAN4551, flash"]
     app --> platform --> sdk --> hw
 ```
 

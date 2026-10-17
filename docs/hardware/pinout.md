@@ -1,6 +1,6 @@
 # Pinout
 
-The pinout is identical on CIM prototype v7 and CIM v0. The firmware's single source is [firmware/boards/cim_pins.h](../../firmware/boards/cim_pins.h); this page is taken from the netlists in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware).
+The firmware's single source is [firmware/boards/cim_pins.h](../../firmware/boards/cim_pins.h); this page is taken from the netlists in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware).
 
 ## Mezzanine connector J1
 

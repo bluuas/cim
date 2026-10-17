@@ -7,7 +7,7 @@ flowchart LR
     bus(["CAN FD bus"]) --- mez
     subgraph cim["CIM"]
         psu["TLVM23615<br/>+BATT to 3.3 V"]
-        mcu["RP2040 (proto v7)<br/>RP2354A (v0)"]
+        mcu["RP2040"]
         tcan["TCAN4551<br/>CAN FD controller<br/>and transceiver"]
         brk["Breakaway part<br/>USB-C, BOOTSEL, SWD"]
         led["RGB LED"]
@@ -20,18 +20,17 @@ flowchart LR
     mez -- "GPIO 22 to 29<br/>USB, SWD, BOOTSEL" --- mcu
 ```
 
-## Boards
+## Board
 
 | Board | MCU | Flash | CAD | `PICO_BOARD` |
 |---|---|---|---|---|
 | CIM prototype v7 | RP2040 | W25Q16JV, 2 MB external | KiCad | `cim_proto_v7` |
-| CIM v0 | RP2354A | 2 MB in package | KiCad | `cim_v0` |
 
-Both boards have the same pinout and the same CAN controller, regulator, LED and connector, so one firmware build differs only in the preset. The design files are in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware) (`cim-pcb-prototype-v7/`, `cim-pcb-v0/`), together with the shared KiCad library and the Raspberry Pi HAT of the [HIL test bench](../hil/README.md).
+The design files are in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware) (`cim-pcb-prototype-v7/`), together with the shared KiCad library and the Raspberry Pi HAT of the [HIL test bench](../hil/README.md).
 
 ## Components and why they were chosen
 
-**RP2040 / RP2354A.** The RP2040 was picked for its community support, its wide use at HSLU and because it runs code from an unencrypted external flash, which suits an open-source product. It has no CAN peripheral, so an external controller is needed. CIM v0 moves to the RP2354A, the RP2350 variant with 2 MB of flash in the package, which removes the external flash chip. [^thesis-mcu]
+**RP2040.** The RP2040 was picked for its community support, its wide use at HSLU and because it runs code from an unencrypted external flash, which suits an open-source product. It has no CAN peripheral, so an external controller is needed. [^thesis-mcu]
 
 **TCAN4551 CAN FD controller.** Requirements: CAN FD at up to 8 Mbit/s, 3.3 V logic, and availability. A controller with an integrated transceiver was preferred over a separate pair because it is smaller and simpler; galvanic isolation was not required. Microchip's MCP251863 and TI's TCAN4551 both qualified, and the TCAN4551 won on package size (3.3 mm x 4.3 mm VQFN-20). It is controlled over SPI and signals events on an interrupt line. [^thesis-can] The CAN lines pass through a common-mode choke before the connector; the thesis found the original RC filter too strong at 8 Mbit/s, which is why the filter is a point to re-evaluate. [^thesis-filter]
 
@@ -54,7 +53,6 @@ Both boards have the same pinout and the same CAN controller, regulator, LED and
 | v5 | breakaway part added; small fixes on USB and TCAN pull resistors |
 | v6 | cleaned-up v5, 0.8 mm board; the version documented in the thesis |
 | prototype v7 | back in KiCad, same pinout, basis of the open-source firmware |
-| v0 | RP2354A instead of RP2040 plus external flash |
 
 Details and pictures of v0 to v6 are in the thesis, chapter 6 (Hardware Implementation), section *Hardware Design Evolution*. [^thesis-hist]
 

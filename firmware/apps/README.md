@@ -58,7 +58,7 @@ add_subdirectory(apps/ebs)
 add_subdirectory(apps/drs)
 ```
 
-Build with the board selected (`cim_v0` is the default):
+Build with the board selected (`cim_proto_v7` is the default):
 
 ```sh
 cmake -S . -B build -G Ninja -DPICO_BOARD=cim_proto_v7

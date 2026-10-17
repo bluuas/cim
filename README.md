@@ -2,26 +2,25 @@
 
 > or: _CIM Is Modular_
 
-CIM is a small, modular interface between a CAN FD bus and sensors and actuators. It was originally developed for Formula Student racecars. It is built around a Raspberry Pi RP2040/RP2350 microcontroller and a TI TCAN4551 CAN FD controller. Peripherals connect through a 20-pin mezzanine connector.
+CIM is a small, modular interface between a CAN FD bus and sensors and actuators. It was originally developed for Formula Student racecars. It is built around a Raspberry Pi RP2040 microcontroller and a TI TCAN4551 CAN FD controller. Peripherals connect through a 20-pin mezzanine connector.
 
 > **Status:** being restructured into an open-source project. The CAN FD bootloader ([#14](https://github.com/bluuas/cim/issues/14), [#15](https://github.com/bluuas/cim/issues/15)) and the gs_usb adapter firmware ([ADR 0001](docs/adr/0001-pc-can-link.md)) are not here yet. Hardware files are in [AMZ-Racing/cim-hardware](https://github.com/AMZ-Racing/cim-hardware).
 
-## Supported boards
+## Supported board
 
-| Board          | MCU                          | `PICO_BOARD`   |
-|----------------|------------------------------|----------------|
-| CIM v0         | RP2354A (2 MB stacked flash) | `cim_v0`       |
-| CIM prototype v7 | RP2040 + W25Q16JV (2 MB)   | `cim_proto_v7` |
+| Board            | MCU                      | `PICO_BOARD`   |
+|------------------|--------------------------|----------------|
+| CIM prototype v7 | RP2040 + W25Q16JV (2 MB) | `cim_proto_v7` |
 
-The pinout is the same on both boards, see [docs/hardware/pinout.md](docs/hardware/pinout.md) and [firmware/boards/cim_pins.h](firmware/boards/cim_pins.h).
+The pinout is in [docs/hardware/pinout.md](docs/hardware/pinout.md) and [firmware/boards/cim_pins.h](firmware/boards/cim_pins.h).
 
 ## Building
 
 ```sh
 git clone --recurse-submodules https://github.com/bluuas/cim.git
 cd cim/firmware
-cmake --preset cim_v0-debug          # or cim_proto_v7-debug, *-release
-cmake --build --preset cim_v0-debug
+cmake --preset cim_proto_v7-debug          # or cim_proto_v7-release
+cmake --build --preset cim_proto_v7-debug
 ```
 
 Output: `build/<preset>/examples/blink/blink.uf2`. Toolchain, devcontainer, flashing and first run: [Getting started](docs/getting-started.md).
