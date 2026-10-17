@@ -82,13 +82,13 @@ class Slot:
                 return values
             time.sleep(0.2)
 
-    def rtt_read(self, elf, seconds, symbol_name="cim_log_rtt"):
+    def rtt_read(self, elf, seconds):
         """Read the RTT log (firmware/log) for `seconds` while the target runs.
 
         Starts OpenOCD with its RTT server on a port per slot (9090 + slot index),
         so several slots can be read at the same time. Returns the received text.
         """
-        address, _ = symbol(elf, symbol_name)
+        address, _ = symbol(elf, "cim_log_rtt")
         port = 9090 + ord(self.name) - ord("a")
         args = ["openocd", "-f", str(self.cfg),
                 "-c", "gdb_port disabled; telnet_port disabled; tcl_port disabled",

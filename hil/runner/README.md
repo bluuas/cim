@@ -1,6 +1,6 @@
 # HIL test runner
 
-pytest tests that run firmware on the CIMs of the HIL bench. They run on the Pi: each test flashes a firmware ELF over SWD (`hil/openocd`), resets the board, and reads the firmware's results from RAM.
+pytest tests that run firmware on the CIMs of the HIL bench. They run on the Pi: each test flashes a firmware ELF over SWD ([hil/openocd](../openocd/README.md)), resets the board, and reads the firmware's results from RAM.
 
 ```mermaid
 sequenceDiagram
@@ -23,7 +23,7 @@ sequenceDiagram
 
 | Fixture | |
 |---|---|
-| `slot_pair` | two present slots on the shared CAN bus (not marked `can = false`), for tests between CIMs |
+| `slot_pair` | two present slots on the shared CAN bus, for tests between CIMs |
 | `slot` | `Slot` of a usable slot: `flash(elf)`, `reset()`, `read(addr, size)`, `read_var(elf, name, fmt)`, `wait_var(elf, name, fmt, predicate)`, `rtt_read(elf, seconds)` |
 | `firmware` | `firmware("config_counter")` returns `<firmware-dir>/examples/config_counter/config_counter.elf`; `firmware("example", subdir="apps")` an app |
 

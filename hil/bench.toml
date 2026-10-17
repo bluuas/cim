@@ -1,7 +1,6 @@
 # What is in which slot of the HIL bench (docs/hil/README.md).
 # present: reachable over SWD from the Pi. defect: the slot is skipped by
-# single-slot tests, with this reason. can = false: the board cannot take part
-# in CAN tests between slots (slot_pair fixture).
+# single-slot tests, with this reason.
 
 [slots.a]
 openocd = "openocd/slot-a.cfg"

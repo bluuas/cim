@@ -74,18 +74,15 @@ def lines(status_file):
     return [f"{socket.gethostname()} {local_ip()}", slots, read_status(status_file)]
 
 
-def open_display(address, rotate):
+def open_display():
     from luma.core.interface.serial import i2c
     from luma.oled.device import ssd1306
 
-    return ssd1306(i2c(port=1, address=address), width=128, height=32, rotate=rotate)
+    return ssd1306(i2c(port=1, address=0x3C), width=128, height=32)
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--address", type=lambda s: int(s, 0), default=0x3C, help="I2C address (default: 0x3C)")
-    p.add_argument("--rotate", type=int, choices=range(4), default=0, help="0..3, in steps of 90 degrees")
-    p.add_argument("--interval", type=float, default=1.0, help="update interval in s (default: 1)")
     p.add_argument("--status-file", type=Path, default=STATUS_FILE, help=f"default: {STATUS_FILE}")
     p.add_argument("--print", action="store_true", help="print the lines instead of using the display")
     args = p.parse_args()
@@ -103,7 +100,7 @@ def main():
     while True:
         try:
             if device is None:
-                device = open_display(args.address, args.rotate)
+                device = open_display()
             with canvas(device) as draw:
                 for row, text in enumerate(lines(args.status_file)):
                     draw.text((0, row * 11), text, fill="white")
@@ -112,7 +109,7 @@ def main():
             device = None
             time.sleep(5)
             continue
-        time.sleep(args.interval)
+        time.sleep(1)
 
 
 if __name__ == "__main__":

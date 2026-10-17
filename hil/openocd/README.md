@@ -1,12 +1,14 @@
 # OpenOCD configs for the HIL slots
 
-One config per slot of the HIL HAT. OpenOCD on the Pi drives SWD directly from the Pi's GPIOs (`linuxgpiod` adapter of the Raspberry Pi OpenOCD build, see `hil/setup-pi.sh`), no debug probe needed.
+One config per slot of the HIL HAT. OpenOCD on the Pi drives SWD directly from the Pi's GPIOs (`linuxgpiod` adapter of the Raspberry Pi OpenOCD build, see [`hil/setup-pi.sh`](../setup-pi.sh)), no debug probe needed.
 
-| Config | Slot | SWCLK | SWDIO | BOOTSEL (unused) |
-|---|---|---|---|---|
-| `slot-a.cfg` | TARGET A (U1) | GPIO26 | GPIO16 | GPIO21 |
-| `slot-b.cfg` | TARGET B (U2) | GPIO6 | GPIO13 | GPIO19 |
-| `slot-c.cfg` | TARGET C (U3) | GPIO27 | GPIO23 | GPIO22 |
+| Config | Slot |
+|---|---|
+| `slot-a.cfg` | TARGET A (U1) |
+| `slot-b.cfg` | TARGET B (U2) |
+| `slot-c.cfg` | TARGET C (U3) |
+
+Pins: [pinout](../../docs/hil/README.md#pinout).
 
 ## Use
 

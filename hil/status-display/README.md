@@ -1,6 +1,6 @@
 # HIL status display
 
-Shows the bench state on the 0.91" OLED on HAT connector J4 (SSD1306, 128×32, I2C bus 1, address `0x3C`), so you can check the bench without logging in.
+Shows the bench state on the 0.91" OLED on HAT connector J4 (SSD1306, 128×32, I2C bus 1, address `0x3C`) for a look at the bench without logging in.
 
 ```
 cim-hil 192.168.31.170
@@ -16,18 +16,7 @@ flash slot B
 
 ## How a slot is read
 
-The pins are read with `pinctrl get`, a plain register read. The display never requests a GPIO line, so it never blocks OpenOCD.
-
-```mermaid
-flowchart TD
-    start(["slot pins"]) --> swclk{"SWCLK is an output?"}
-    swclk -- yes --> swd["swd"]
-    swclk -- no --> bootsel{"BOOTSEL reads high?"}
-    bootsel -- yes --> on["on"]
-    bootsel -- no --> off["off"]
-```
-
-BOOTSEL (the CIM's QSPI_SS) has a pull-up on the CIM and a pull-down on the Pi, so it reads high only when the CIM is powered. SWDIO is not used for this, because OpenOCD leaves it without a pull and it floats afterwards.
+The pins are read with `pinctrl get`, a plain register read; the display never requests a GPIO line, so it never blocks OpenOCD. A slot shows `swd` when its SWCLK is configured as an output (OpenOCD active), otherwise `on` when BOOTSEL reads high, otherwise `off`. BOOTSEL (the CIM's QSPI_SS) has a pull-up on the CIM and a pull-down on the Pi, so it reads high only when the CIM is powered. SWDIO is not used: OpenOCD leaves it without a pull and it floats afterwards.
 
 ## Install
 

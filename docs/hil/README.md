@@ -126,8 +126,8 @@ The three proto v7 boards are assembled differently and have a history of bad so
 
 | Board | Assembly | Slot | State |
 |---|---|---|---|
-| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads | C | defective RP2040 hardware divider (#41): large divisions return wrong results, so no firmware tests on it; CAN, SWD and power are fine. A good chip prints `q=0x00022e09 r=0x00000001` in the divider test of #41, this one `q=0x00022fff r=0x0000e347`. |
-| "full" | fully assembled, UID `E66208F4176B6B38` | A | +BATT and CAN verified after resoldering J1, SWD worked once in slot C. In slot A its SWD does not connect (checked 2026-10-17). Earlier its SWCLK line read low in slots A and B while SWDIO and BOOTSEL read high, so J1 pin 9 is open again (the slots are fine: the "cut" board works in A). Before the resoldering, the +BATT path sagged under load (`tcan_init()` returned `TCAN_ERR_NO_VSUP` while the idle `tcan_probe` saw no undervoltage), SWD answered only WAIT, and CAN showed the stuck-stub signature below. |
-| "noUSB" | USB-C connector not populated | B | good after resoldering J1: SWD, VSUP and CAN verified. Before, its CAN showed the stuck-stub signature (never transmits, REC 127 with stuff errors, hears nothing) and later its SWD lines read low. |
+| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads | C | RP2040 hardware divider defective (#41): no firmware tests; CAN, SWD and power work. |
+| "full" | fully assembled, UID `E66208F4176B6B38` | A | J1 pin 9 (SWCLK) open again after resoldering: no SWD in slot A (2026-10-17); +BATT and CAN work. |
+| "noUSB" | USB-C connector not populated | B | SWD, VSUP and CAN verified after resoldering J1. |
 
 A board whose CANH/CANL do not reach the terminated bus (open J1 pins 11/12) drives only its own C51/C52; the line returns to recessive slower than one bit at 500 kbit/s, the node loses arbitration against its own SOF and then counts stuff errors as a receiver (TEC 0, REC 127). The TCAN's bus-fault flags do not show it.

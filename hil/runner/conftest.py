@@ -47,12 +47,11 @@ def slot(request):
 
 @pytest.fixture
 def slot_pair(request):
-    """Two slots on the shared CAN bus, for tests between CIMs: present and
-    not marked `can = false`. Other defects (like #41) do not matter, because
-    the CAN bit timing is checked separately (both boards reach 500 kbit/s)."""
+    """Two present slots on the shared CAN bus, for tests between CIMs. A defect
+    does not exclude a slot: #41 (hardware divider) does not affect CAN."""
     slots = load_bench(request.config)
     usable = [Slot(n, i["openocd"]) for n, i in sorted(slots.items())
-              if i.get("present", False) and i.get("can", True)]
+              if i.get("present", False)]
     if len(usable) < 2:
         pytest.skip("needs two CIMs with CAN on the bus")
     return usable[0], usable[1]
