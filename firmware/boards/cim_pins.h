@@ -8,7 +8,7 @@
 // NOTE: THIS HEADER IS ALSO INCLUDED BY ASSEMBLER SO
 //       SHOULD ONLY CONSIST OF PREPROCESSOR DIRECTIVES
 // -----------------------------------------------------
-// Pinout shared by all CIM boards (identical on cim-prototype-v7 and cim-pcb-v0).
+// Pinout shared by all CIM boards.
 // Source: netlists of AMZ-Racing/cim-hardware.
 
 #ifndef _BOARDS_CIM_PINS_H

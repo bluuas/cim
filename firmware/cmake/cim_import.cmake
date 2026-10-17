@@ -7,7 +7,7 @@
 #   cim_init()                                     # after project()
 #   add_subdirectory(apps/my_app)                  # uses cim_add_app()
 #
-# Board: -DPICO_BOARD=cim_proto_v7 (RP2040) or cim_v0 (RP2354A, default).
+# Board: -DPICO_BOARD=cim_proto_v7 (RP2040, default).
 # The Pico SDK is found like the SDK's own pico_sdk_import.cmake does
 # (PICO_SDK_PATH, or PICO_SDK_FETCH_FROM_GIT).
 
@@ -18,7 +18,7 @@ get_filename_component(CIM_FIRMWARE_DIR ${CMAKE_CURRENT_LIST_DIR}/.. ABSOLUTE)
 # Board headers: CIM's boards; a project can append its own directories.
 list(APPEND PICO_BOARD_HEADER_DIRS ${CIM_FIRMWARE_DIR}/boards)
 if (NOT DEFINED PICO_BOARD)
-    set(PICO_BOARD cim_v0)
+    set(PICO_BOARD cim_proto_v7)
 endif()
 
 include(${CIM_FIRMWARE_DIR}/pico_sdk_import.cmake)

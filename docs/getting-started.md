@@ -4,7 +4,7 @@ From a clone to a CIM that blinks, talks over USB and has a node address. Then: 
 
 ## What you need
 
-- A CIM board, either CIM v0 or CIM prototype v7 (see [Hardware overview](hardware/overview.md)). USB-C powers the board and is enough for everything on this page.
+- A CIM board, a CIM prototype v7 board (see [Hardware overview](hardware/overview.md)). USB-C powers the board and is enough for everything on this page.
 - For CAN: a supply on `+BATT` through the mezzanine connector (12 V on the bench, the 24 V LV system in the car). Over USB alone the CAN controller reports undervoltage and stays off.
 - Optional: a debug probe (CMSIS-DAP) on the SWD pads, or the [HIL test bench](hil/README.md).
 
@@ -23,12 +23,7 @@ In an existing clone, run `git submodule update --init`.
 
 The devcontainer (VS Code, *Reopen in Container*) provides the ARM toolchain, the Pico SDK, picotool and OpenOCD. Without it you need `arm-none-eabi-gcc`, CMake 3.13 or newer, Ninja and the [Pico SDK](https://github.com/raspberrypi/pico-sdk) 2.1 or newer, with `PICO_SDK_PATH` set.
 
-There is one CMake preset per board and build type:
-
-| Preset | Board |
-|---|---|
-| `cim_v0-debug`, `cim_v0-release` | CIM v0 (RP2354A) |
-| `cim_proto_v7-debug`, `cim_proto_v7-release` | CIM prototype v7 (RP2040) |
+There is one CMake preset per build type for the CIM prototype v7 (RP2040): `cim_proto_v7-debug` and `cim_proto_v7-release`.
 
 ```sh
 cd firmware
@@ -55,7 +50,7 @@ openocd -f interface/cmsis-dap.cfg -f target/rp2040.cfg \
     -c "adapter speed 5000" -c "program build/cim_proto_v7-debug/examples/blink/blink.elf verify reset exit"
 ```
 
-Use `target/rp2350.cfg` for CIM v0. On the HIL bench the Pi flashes the boards over its GPIOs, see [OpenOCD per slot](../hil/openocd/README.md).
+On the HIL bench the Pi flashes the boards over its GPIOs, see [OpenOCD per slot](../hil/openocd/README.md).
 
 ## First run
 

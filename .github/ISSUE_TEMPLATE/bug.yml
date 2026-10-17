@@ -8,7 +8,6 @@ body:
       label: Board
       options:
         - CIM prototype v7 (RP2040)
-        - CIM v0 (RP2354A)
         - not hardware related
     validations:
       required: true

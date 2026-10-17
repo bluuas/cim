@@ -18,8 +18,6 @@ jobs:
         preset:
           - cim_proto_v7-debug
           - cim_proto_v7-release
-          - cim_v0-debug
-          - cim_v0-release
     steps:
       - uses: actions/checkout@v4
         with:
