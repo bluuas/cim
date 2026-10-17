@@ -20,6 +20,8 @@
 #include "TCAN4550.h"
 
 #define TX_ID     0x100u
+#define EMPTY_ID  0x110u   /* frames without payload (DLC 0), every EMPTY_PERIOD_US */
+#define EMPTY_PERIOD_US 100000u
 #define PERIOD_US 2000u
 #define LEN       64u
 
@@ -42,6 +44,9 @@ volatile struct {
     uint32_t last_error;   /* MCAN last error code, arbitration phase (tcan_status_t) */
     uint32_t last_data_error; /* same, data phase */
     uint32_t dev_ir;       /* TCAN device interrupt register 0x0820: bus fault flags in bits 8, 10, 24..31 */
+    uint32_t empty_sent;   /* DLC 0 frames sent */
+    uint32_t empty_echoes; /* DLC 0 frames echoed back with length 0 */
+    uint32_t empty_bad;    /* ID + 1 echoes of DLC 0 frames with a length other than 0 */
 } state = {.period_us = PERIOD_US, .len = LEN};
 
 static void led(bool r, bool g, bool b)
@@ -104,6 +109,8 @@ int main(void)
     bool green = false;
     absolute_time_t next_tx = get_absolute_time();
     absolute_time_t next_report = make_timeout_time_ms(1000);
+    tcan_msg_t empty = {.id = EMPTY_ID, .fd = true, .brs = true, .len = 0};
+    absolute_time_t next_empty = make_timeout_time_us(EMPTY_PERIOD_US);
 
     for (;;) {
         if (time_reached(next_tx)) {
@@ -123,10 +130,23 @@ int main(void)
             }
         }
 
+        if (time_reached(next_empty)) {
+            next_empty = delayed_by_us(next_empty, EMPTY_PERIOD_US);
+            if (tcan_send(&empty) == TCAN_OK) {
+                state.empty_sent++;
+            }
+        }
+
         tcan_poll();
         tcan_msg_t rx;
         while (tcan_receive(&rx)) {
-            if (rx.id == TX_ID + 1) {
+            if (rx.id == EMPTY_ID + 1) {
+                if (rx.len == 0) {
+                    state.empty_echoes++;
+                } else {
+                    state.empty_bad++;
+                }
+            } else if (rx.id == TX_ID + 1) {
                 check_echo(&rx, &last_echo);
             } else {
                 state.other_rx++;

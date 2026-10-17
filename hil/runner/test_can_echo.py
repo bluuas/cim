@@ -7,10 +7,10 @@ import pytest
 FRAMES = 10000
 
 # examples/can_tx_counter/main.c
-TX_STATE = "<i17I"
+TX_STATE = "<i20I"
 TX_FIELDS = ("init_err", "sent", "send_busy", "send_err", "echoes", "echo_bad", "echo_gaps", "other_rx",
              "period_us", "len", "tx_errors", "rx_errors", "bus_off", "rx_lost", "rx_overflows",
-             "last_error", "last_data_error", "dev_ir")
+             "last_error", "last_data_error", "dev_ir", "empty_sent", "empty_echoes", "empty_bad")
 # examples/can_echo/main.c
 ECHO_STATE = "<i13I"
 ECHO_FIELDS = ("init_err", "received", "echoed", "send_busy", "send_err", "last_id",
@@ -53,6 +53,9 @@ def test_can_echo(slot_pair, firmware, record_property):
     assert tx["echo_bad"] == 0 and tx["echo_gaps"] == 0, tx
     # echoes still in flight at the time of the read
     assert tx["sent"] - tx["echoes"] <= 2, tx
+    # frames without payload (DLC 0, #34) come back with length 0
+    assert tx["empty_sent"] > 0 and tx["empty_bad"] == 0, tx
+    assert tx["empty_sent"] - tx["empty_echoes"] <= 2, tx
     # one frame may sit between received++ and echoed++ at the time of the read
     assert echo["received"] >= FRAMES and echo["received"] - echo["echoed"] <= 1, echo
     assert tx["tx_errors"] == 0 and tx["rx_errors"] == 0, tx
