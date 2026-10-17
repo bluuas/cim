@@ -1,0 +1,36 @@
+name: pr-labels
+
+# Labels a PR from the type in its title, for the categories of the generated
+# release notes in .github/release.yml. Does not check out the PR's code.
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set the labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          for label in enhancement bug documentation breaking; do
+            gh api -X DELETE "repos/$GH_REPO/issues/$PR/labels/$label" 2>/dev/null || true
+          done
+          labels=()
+          case "$TITLE" in
+            feat*) labels+=(enhancement) ;;
+            fix*) labels+=(bug) ;;
+            docs*) labels+=(documentation) ;;
+          esac
+          [[ "$TITLE" =~ ^[a-z]+(\([a-z0-9-]+\))?! ]] && labels+=(breaking)
+          for label in "${labels[@]}"; do
+            gh api -X POST "repos/$GH_REPO/issues/$PR/labels" -f "labels[]=$label" >/dev/null
+          done
