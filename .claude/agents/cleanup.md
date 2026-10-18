@@ -16,7 +16,7 @@ The repository reads like a well-kept engineering reference: plain, exact, imper
 - No meta text. Not "This page describes...", "Note that...", "It is important to...", "In this section we...". State the thing.
 - No summaries that repeat what was just said, no closing lines, no "Conclusion" after two paragraphs.
 - Impersonal voice. "The driver polls" instead of "we poll" or "you can poll". Instructions in the imperative: "Run", "Set", "Connect".
-- Numbers with units and sources. A measured value names where it was measured. A datasheet claim names the datasheet and section.
+- Numbers with units and sources. A measured value names where it was measured. A datasheet claim names the datasheet and section. A number whose source was not read in this session is marked `[needs source]`, never written as fact.
 - Facts over adjectives. "4 KB sector, erase 45 ms" instead of "fast and reliable".
 
 ## Documentation
@@ -31,7 +31,7 @@ The repository reads like a well-kept engineering reference: plain, exact, imper
 ## Code
 
 - No abstraction with one user. No wrapper around a single call. No interface for one implementation.
-- No option, parameter or `#define` that nothing sets. No "for future use".
+- No option, parameter or `#define` that nothing sets. No "for future use". Public names (functions and macros in `include/cim/`, `tcan.h`, options of `cim_add_app()`) are never deleted by cleanup; they are reported as `[decide]`.
 - No defensive check for a state that cannot occur; a check that can fail says what happens then.
 - No dead code, no commented-out code, no `TODO` without an issue number.
 - Short functions with one job, named after that job. Naming follows the repository convention (`snake_case`, `cim_` for platform, `app_` for applications).
@@ -46,10 +46,10 @@ Layers with no second user. Configurability nobody asked for. Generic names (`ma
 # Procedure
 
 1. Read the target: the diff (`git diff`, a PR) or the files named. For the whole repository, walk `README.md`, `CONTRIBUTING.md`, `docs/`, every `README.md` under `firmware/`, `hil/`, `tools/`, then the sources, excluding `ti/` and `FreeRTOS-Kernel/`.
-2. Collect findings. Each one: file and line, what is wrong in one sentence, the replacement. Group by file. Skip anything that is merely a matter of taste when the existing text is clear.
+2. Collect findings. Each one: file and line, what is wrong in one sentence, the replacement. Group by file. Skip anything that is merely a matter of taste when the existing text is clear. A bug is reported as a finding to open an issue for, not as an edit.
 3. Report before editing. Keep the report short; the rewrite proposals are the content, not explanations of the rules.
-4. Apply only when asked, and only edits that keep behaviour, facts and public names unchanged. After editing code, run the build (`cmake --build --preset cim_proto_v7-debug` from `firmware/`) and the host tests (`firmware/tests/host`); after editing docs, run `mkdocs build --strict`.
-5. Stage with `git add`, show `git status`, propose a commit message in Conventional Commits form. Never commit.
+4. Apply only when asked, and only edits that keep behaviour, facts and public names unchanged. After editing code, run the build (`cmake --build --preset cim_proto_v7-debug` from `firmware/`) and the host tests (`firmware/tests/host`); after editing docs, run `mkdocs build --strict`. The ARM toolchain and mkdocs are in the devcontainer; outside it, install `docs/requirements.txt` into a venv for the docs check.
+5. Commit on a `chore/` branch with a Conventional Commits message, one topic per commit. Never push, open a PR or merge into `main`.
 
 # Examples
 
