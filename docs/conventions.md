@@ -201,6 +201,12 @@ Move an issue to `Waiting` only with a comment that names the blocker (a decisio
 
 The issue is titled `Release vX.Y.Z` and sits in that milestone.
 
+### TRK-06 An issue states when it is done, and is closed when that is met (MUST)
+
+Every issue has a checklist and a "Done when" section; the issue forms require both. When the criteria are met, close the issue with a comment that names the evidence: a PR, a CI run or a bench result. An issue that is not ready is moved to another milestone, not closed, and one that is no longer wanted is closed with the reason.
+
+*Why:* "looks finished" is a guess. Criteria written down in advance make closing a check instead of a judgement.
+
 ## Boards
 
 ### BRD-01 Board revisions are numbered and independent of the firmware version (MUST)
