@@ -84,14 +84,14 @@ The `hil` job in [`.github/workflows/build.yml`](../../.github/workflows/build.y
 
 ```mermaid
 flowchart LR
-    push["push to main<br/>or manual run"] --> fw["firmware job<br/>(GitHub-hosted)"]
+    run["manual run"] --> fw["firmware job<br/>(GitHub-hosted)"]
     fw -- "artifact<br/>firmware-cim_proto_v7-debug" --> hil["hil job<br/>(runner on the Pi)"]
     hil --> report["artifact hil-report<br/>(JUnit XML)"]
 ```
 
 > [!CAUTION]
 > The repository is public, and a self-hosted runner executes the repository's code on the Pi. Therefore:
-> - The `hil` job runs only for pushes to `main` and manual runs (`workflow_dispatch`), never for pull requests.
+> - The `hil` job runs only manually (`workflow_dispatch`), never for pushes or pull requests.
 > - Fork pull requests need approval for all external contributors (Settings → Actions → General). Never approve a fork PR that changes workflows or uses `runs-on: [self-hosted, hil]` without reading it.
 > - The runner runs as its own user `gh-runner` without sudo, with access to GPIO, I2C, USB and serial ports only.
 
@@ -118,7 +118,7 @@ sudo -u gh-runner -H bash -c 'cd ~/actions-runner && ./config.sh --url https://g
 sudo bash -c 'cd /home/gh-runner/actions-runner && ./svc.sh install gh-runner && ./svc.sh start'
 ```
 
-The runner then shows as *Idle* under Settings → Actions → Runners. To run the HIL tests by hand: Actions → build → *Run workflow*.
+The runner then shows as *Idle* under Settings → Actions → Runners. To run the HIL tests: Actions → build → *Run workflow*, with the branch to test.
 
 ## Known boards
 
