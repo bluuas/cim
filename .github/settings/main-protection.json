@@ -1,0 +1,27 @@
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": [
+      "firmware (cim_proto_v7-debug)",
+      "firmware (cim_proto_v7-release)",
+      "host-tests",
+      "consumer",
+      "tools-tests",
+      "pr-title",
+      "no-binaries"
+    ]
+  },
+  "enforce_admins": false,
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 0,
+    "dismiss_stale_reviews": false,
+    "require_code_owner_reviews": false
+  },
+  "restrictions": null,
+  "required_linear_history": true,
+  "allow_force_pushes": false,
+  "allow_deletions": false,
+  "required_conversation_resolution": false,
+  "block_creations": false,
+  "lock_branch": false
+}
