@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Repository settings as code: .github/settings/*.json against GitHub.
+#
+#   scripts/settings check     list differences between the files and GitHub
+#   scripts/settings apply     write the files to GitHub (needs admin rights)
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+repo=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+dir=.github/settings
+
+# the settings GitHub reports, in the shape of the files
+live_repository() {
+    gh api "repos/$repo" | jq -S "{$(jq -r 'keys | map(. + ": ." + .) | join(", ")' "$dir/repository.json")}"
+}
+
+live_protection() {
+    gh api "repos/$repo/branches/main/protection" --jq '{
+        required_status_checks: {strict: .required_status_checks.strict, contexts: (.required_status_checks.contexts | sort)},
+        enforce_admins: .enforce_admins.enabled,
+        required_pull_request_reviews: {
+            required_approving_review_count: .required_pull_request_reviews.required_approving_review_count,
+            dismiss_stale_reviews: .required_pull_request_reviews.dismiss_stale_reviews,
+            require_code_owner_reviews: .required_pull_request_reviews.require_code_owner_reviews},
+        restrictions: null,
+        required_linear_history: .required_linear_history.enabled,
+        allow_force_pushes: .allow_force_pushes.enabled,
+        allow_deletions: .allow_deletions.enabled,
+        required_conversation_resolution: .required_conversation_resolution.enabled,
+        block_creations: .block_creations.enabled,
+        lock_branch: .lock_branch.enabled}' | jq -S .
+}
+
+case "${1:-}" in
+    check)
+        status=0
+        diff <(jq -S . "$dir/repository.json") <(live_repository) || status=1
+        diff <(jq -S '.required_status_checks.contexts |= sort' "$dir/main-protection.json") <(live_protection) || status=1
+        [ $status -eq 0 ] && echo "settings match"
+        exit $status
+        ;;
+    apply)
+        gh api -X PATCH "repos/$repo" --input "$dir/repository.json" --silent
+        gh api -X PUT "repos/$repo/branches/main/protection" --input "$dir/main-protection.json" --silent
+        echo "settings applied"
+        ;;
+    *) echo "usage: scripts/settings check|apply" >&2; exit 2 ;;
+esac

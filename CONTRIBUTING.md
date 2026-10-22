@@ -28,6 +28,10 @@ git push origin v1.2.0
 
 The `release` workflow then checks that the tagged commit is on `main`, builds the release presets for all boards and publishes a GitHub release with one zip (`.uf2` and `.elf`) per board. A tag with a suffix such as `v1.2.0-rc.1` is published as a pre-release.
 
+## Repository settings
+
+The merge methods and the protection of `main` are in `.github/settings/`. Change the file in a PR, then an admin runs `scripts/settings apply`; `scripts/settings check` shows any difference.
+
 ## Building and testing
 
 Build: [README](README.md#building). Test firmware changes on hardware where possible.
