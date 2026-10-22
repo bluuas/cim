@@ -87,9 +87,9 @@ Features, bug fixes and decisions belong to an issue: put `Closes #<issue>` in t
 
 ### GIT-10 A PR is up to date and green before it is merged (MUST)
 
-The required checks are `firmware (cim_proto_v7-debug)`, `firmware (cim_proto_v7-release)`, `host-tests`, `consumer`, `tools-tests`, `pr-title` and `no-binaries`.
+The required checks are listed in `.github/settings/main-protection.json`.
 
-*Enforced by:* branch protection on `main`.
+*Enforced by:* branch protection on `main`. The settings are code: `scripts/settings check` compares the files with GitHub and `scripts/settings apply` writes them, so a change is a PR first.
 
 ### GIT-11 `main` is never force-pushed or deleted (MUST NOT)
 
