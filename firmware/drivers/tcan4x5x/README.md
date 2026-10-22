@@ -57,3 +57,23 @@ for (;;) {
 - **TX mode:** `TCAN_TX_QUEUE` (TI's default) sends pending frames by ID priority. `TCAN_TX_FIFO` keeps the send order, e.g. for multi-frame protocols.
 - **Polling:** the nINT interrupt only sets a flag. All SPI traffic happens in `tcan_poll()`, `tcan_send()` and `tcan_get_status()`, so call them from one context.
 - **TI functions:** anything not covered by the API can be done with TI's functions (`TCAN4550.h`) after `tcan_init()`.
+
+## SPI clock
+
+`TCAN_CONFIG_DEFAULT` requests 2 MHz. Limits and measurements (#102):
+
+- **Datasheet:** TCAN4551-Q1 (SLLSEZ4A), SPI switching characteristics: SCK up to 18 MHz (period 56 ns, high and low 18 ns each), chip select disable time 125 ns, data out valid 20 ns at 3.135 V to 5.25 V VIO. The table is marked "specified by design". The 2 KB message RAM is read in bursts of up to 255 words (one length byte, section 8.5).
+- **RP2040:** the SDK derives the SPI clock from the 125 MHz peripheral clock by integer dividers, so the clock actually set is lower than requested: 18 and 20 MHz both give 15.62 MHz. The board with the divider defect of #41 computes other values (2 MHz gives 1.79 MHz, 8 MHz gives 4.19 MHz).
+- **Method:** `examples/tcan_spi_bench` writes a pattern into the message RAM and reads it back 5000 times (10.24 MB) at each clock, then writes and reads back 1000 times at the clock under test, and times a 72-byte read (one 64-byte FD receive element). `hil/runner/spi_bench.py` runs it on a slot.
+
+| Requested | Actual (good / defective board) | 72-byte read | Elements per second | Errors in 10.24 MB |
+|---|---|---|---|---|
+| 2 MHz | 1.95 / 1.79 MHz | 371 / 402 µs | 2700 / 2500 | none |
+| 5 MHz | 4.81 / 4.19 MHz | 152 / 287 µs | 6600 / 3500 | none |
+| 10 MHz | 8.93 / 8.93 MHz | 83 / 84 µs | 12 000 / 12 000 | none |
+| 12 MHz | 10.42 / 10.49 MHz | 71 / 78 µs | 14 000 / 12 800 | none |
+| 16 MHz | 15.62 / 12.58 MHz | 48 / 53 µs | 20 700 / 18 800 | none |
+| 18 MHz | 15.62 / 16.78 MHz | 48 / 49 µs | 20 700 / 20 500 | none |
+| 24 MHz (out of spec) | 20.83 / 20.97 MHz | 37 / 41 µs | 27 000 / 24 400 | good board none, defective board 2700 of 5000 reads wrong |
+
+Running from RAM (`copy_to_ram`) gave the same results on both boards, and the TCAN's SPIERR flag stayed 0 in every run. The throughput stays below the wire rate (1.8 MB/s at 21 MHz) because the SDK's SPI read loop handles one byte at a time.
