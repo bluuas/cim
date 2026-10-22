@@ -77,3 +77,22 @@ for (;;) {
 | 24 MHz (out of spec) | 20.83 / 20.97 MHz | 37 / 41 µs | 27 000 / 24 400 | good board none, defective board 2700 of 5000 reads wrong |
 
 Running from RAM (`copy_to_ram`) gave the same results on both boards, and the TCAN's SPIERR flag stayed 0 in every run. The throughput stays below the wire rate (1.8 MB/s at 21 MHz) because the SDK's SPI read loop handles one byte at a time.
+
+### Load test
+
+`examples/can_load` and `hil/runner/can_load.py` send 64-byte FD frames back to back from one board and count them on another. The sender runs at 18 MHz requested, the receiver's SPI clock is the parameter. The counter in the payload shows lost frames; "bad" counts frames whose payload does not match.
+
+| Bit rates | Receiver SPI (requested / actual) | Frames | Received | Lost | Bad payload |
+|---|---|---|---|---|---|
+| 500k / 2M, 2880 frames/s | 2 MHz / 1.95 MHz | 30 000 | 19 150 | 10 850 | 2792 |
+| 500k / 2M, 2880 frames/s | 5 MHz / 4.81 MHz | 30 000 | 30 000 | 0 | 0 |
+| 500k / 2M, 2880 frames/s | 10 MHz / 8.93 MHz | 30 000 | 30 000 | 0 | 0 |
+| 500k / 8M, 7490 frames/s | 10 MHz / 8.93 MHz | 100 000 | 81 668 | 18 332 | 8304 |
+| 500k / 8M, 7490 frames/s | 12 MHz / 10.42 MHz | 100 000 | 90 450 | 9550 | 5014 |
+| 500k / 8M, 7490 frames/s | 18 MHz / 15.62 MHz | 500 000 | 500 000 | 0 | 0 |
+| 500k / 8M, 8-byte frames, 13 340 frames/s | 10, 12 and 18 MHz | 200 000 each | all | 0 | 0 |
+
+- The sender saturates the bus: 2880 frames per second at 500k/2M (347 µs per frame) and 7490 at 500k/8M (133 µs).
+- At 2 MHz the receiver cannot keep up even at 500k/2M. For continuous 64-byte frames at 500k/8M it needs the 15.62 MHz that 18 MHz requests; short frames cost less per frame and pass at 10 MHz.
+- The driver does not notice the loss: `rx_lost` stayed 0 in every run. TI's `TCAN4x5x_MRAM_Configure()` puts RX FIFO 0 in overwrite mode, so a full FIFO overwrites its oldest element, which can also corrupt a frame that is being read.
+- The board with the divider defect (#41) cannot configure the 8 Mbit/s data timing with the hardware divider (`tcan_init()` returns `TCAN_ERR_CONFIG`). `can_load` is built with the software divider for that reason.
