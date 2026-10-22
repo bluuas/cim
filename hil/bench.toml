@@ -1,20 +1,24 @@
 # What is in which slot of the HIL bench (docs/hil/README.md).
 # present: reachable over SWD from the Pi. defect: the slot is skipped by
-# single-slot tests, with this reason.
+# single-slot tests, with this reason. uid: flash unique ID of the board, checked by
+# hil/runner/bench_check.py.
 
 [slots.a]
 openocd = "openocd/slot-a.cfg"
 board = "cim_proto_v7"
 present = false
+uid = "E66208F4176B6B38"
 note = "board \"full\" does not connect over SWD, see docs/hil/README.md"
 
 [slots.b]
 openocd = "openocd/slot-b.cfg"
 board = "cim_proto_v7"
 present = true
+uid = "E6620CD64F4B8B36"
 
 [slots.c]
 openocd = "openocd/slot-c.cfg"
 board = "cim_proto_v7"
 present = true
+uid = "E66568714F1B9426"
 defect = "defective RP2040 hardware divider (#41)"

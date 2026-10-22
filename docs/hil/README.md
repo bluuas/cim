@@ -126,8 +126,8 @@ The three proto v7 boards are assembled differently and have a history of bad so
 
 | Board | Assembly | Slot | State |
 |---|---|---|---|
-| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads | C | RP2040 hardware divider defective (#41): no firmware tests; CAN, SWD and power work. |
+| "cut" | breakaway part cut off: no USB, no BOOTSEL button, no SWD pads, UID `E66568714F1B9426` | C | RP2040 hardware divider defective (#41): no firmware tests; CAN, SWD and power work. |
 | "full" | fully assembled, UID `E66208F4176B6B38` | A | J1 pin 9 (SWCLK) open again after resoldering: no SWD in slot A (2026-10-17); +BATT and CAN work. |
-| "noUSB" | USB-C connector not populated | B | SWD, VSUP and CAN verified after resoldering J1. |
+| "noUSB" | USB-C connector not populated, UID `E6620CD64F4B8B36` | B | SWD, VSUP and CAN verified after resoldering J1. |
 
 A board whose CANH/CANL do not reach the terminated bus (open J1 pins 11/12) drives only its own C51/C52; the line returns to recessive slower than one bit at 500 kbit/s, the node loses arbitration against its own SOF and then counts stuff errors as a receiver (TEC 0, REC 127). The TCAN's bus-fault flags do not show it.
