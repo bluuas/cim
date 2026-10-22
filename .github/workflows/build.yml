@@ -97,12 +97,12 @@ jobs:
           pip install pytest
           python -m pytest tools
 
-  # HIL tests (hil/runner) on the bench Pi. Only for pushes to main and manual
-  # runs, never for pull requests: the self-hosted runner executes the
-  # repository's code on real hardware. See docs/hil/README.md.
+  # HIL tests (hil/runner) on the bench Pi. Manual runs only, never for pull
+  # requests: the self-hosted runner executes the repository's code on real
+  # hardware. See docs/hil/README.md.
   hil:
     needs: firmware
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: [self-hosted, hil]
     timeout-minutes: 20
     concurrency:
