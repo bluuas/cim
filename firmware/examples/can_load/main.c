@@ -145,6 +145,7 @@ int main(void)
     cfg.spi.baudrate = load.spi_hz;
     cfg.nominal_bitrate = load.nominal_bps;
     cfg.data_bitrate = load.data_bps;
+    cfg.tx_mode = TCAN_TX_FIFO; /* queue mode sends equal IDs by buffer number, not in call order */
     load.init_err = tcan_init(&cfg);
     if (load.init_err != TCAN_OK) {
         load.done = 1;
