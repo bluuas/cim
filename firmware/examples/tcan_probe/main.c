@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 #include "pico/stdlib.h"
+#include "pico/unique_id.h"
 
 #include "TCAN4550.h"
 #include "cim/hal.h"
@@ -42,6 +43,7 @@ volatile struct {
     bool nint_high_after;  /* nINT released after clearing interrupts */
     bool vsup_ok;          /* no undervoltage on VSUP */
     bool ok;
+    uint8_t uid[8];        /* flash unique ID: identifies the board (hil/bench-check) */
 } probe;
 
 static void on_nint(uint8_t pin, void *ctx)
@@ -65,6 +67,12 @@ int main(void)
     cim_gpio_init_out(CIM_LED_G_PIN, CIM_LED_ACTIVE_LOW);
     cim_gpio_init_out(CIM_LED_B_PIN, CIM_LED_ACTIVE_LOW);
     led(false, false, true);
+
+    pico_unique_board_id_t uid;
+    pico_get_unique_board_id(&uid);
+    for (unsigned i = 0; i < sizeof uid.id; i++) {
+        probe.uid[i] = uid.id[i];
+    }
 
     probe.baudrate = TCAN4x5x_SPI_Init(&tcan_spi);
     cim_gpio_init_in(CIM_TCAN_nINT_PIN, CIM_GPIO_PULL_UP);

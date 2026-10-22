@@ -19,6 +19,10 @@ sequenceDiagram
 
 [`hil/bench.toml`](../bench.toml) says what is in each slot. A test that uses the `slot` fixture runs once per slot; empty slots and slots with a known defect are skipped with the reason from the file.
 
+## Bench check
+
+`python3 bench_check.py` flashes `examples/tcan_probe` into every slot and prints SWD, the board's UID, the SPI speed (the hardware divider defect of #41 shows as 1.79 MHz instead of 1.95 MHz), the TCAN device ID and VSUP. It exits 1 if a slot differs from `bench.toml` (`present`, `uid`). Run it after moving boards.
+
 ## Fixtures
 
 | Fixture | |
