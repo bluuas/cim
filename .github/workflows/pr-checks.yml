@@ -12,15 +12,12 @@ jobs:
   pr-title:
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v4
+
       - name: Check the PR title
         env:
           TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          pattern='^(feat|fix|docs|ci|build|refactor|test|perf|style|chore)(\([a-z0-9-]+\))?!?: [a-z0-9`].*[^.]$'
-          if [ "${#TITLE}" -gt 72 ] || ! [[ "$TITLE" =~ $pattern ]]; then
-            echo "::error::PR title '$TITLE' must be '<type>(<scope>): <description>', at most 72 characters, lowercase, without a trailing period"
-            exit 1
-          fi
+        run: scripts/check title "$TITLE"
 
   # Binaries belong in releases, not in git.
   no-binaries:

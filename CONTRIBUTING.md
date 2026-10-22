@@ -10,8 +10,9 @@ How work on CIM is organised. The rules behind it, with IDs you can cite in a re
    - The title follows Conventional Commits, because it becomes the commit message on `main` ([GIT-04](docs/conventions.md#git-04-commit-messages-and-pr-titles-follow-conventional-commits-must)).
    - Put `Closes #<issue>` in the description if there is an issue.
    - For firmware changes, state the board you tested on.
-4. **CI must pass.** Every PR builds the firmware and the consumer project, builds the docs site, runs the host and tool tests, checks the title and rejects added binaries. `main` only accepts PRs that are up to date and green.
-5. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards. Auto-merge merges the PR as soon as the required checks pass.
+4. **Check before you push:** `scripts/check` runs the host tests, the docs build and the firmware build in the devcontainer image; `scripts/check title "<title>"` checks a PR title. For firmware changes, also run the HIL tests on the branch (Actions → build → *Run workflow*).
+5. **CI must pass.** Every PR builds the firmware and the consumer project, builds the docs site, runs the host and tool tests, checks the title and rejects added binaries. `main` only accepts PRs that are up to date and green.
+6. **Squash merge.** Each PR becomes a single commit on `main`, and the branch is deleted afterwards. Auto-merge merges the PR as soon as the required checks pass.
 
 Design decisions are recorded as [ADRs](docs/adr/README.md).
 
