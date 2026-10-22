@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# The checks of CI, run locally in the devcontainer image (needs docker).
+#
+#   scripts/check                    host tests, docs, firmware (default)
+#   scripts/check title "<title>"    PR title
+#   scripts/check host|docs|firmware|consumer
+#
+# Containers run as the calling user, so build/ stays writable.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+image=cim-dev:latest
+
+title() {
+    local pattern='^(feat|fix|docs|ci|build|refactor|test|perf|style|chore)(\([a-z0-9-]+\))?!?: [a-z0-9`].*[^.]$'
+    if [ "${#1}" -gt 72 ] || ! [[ "$1" =~ $pattern ]]; then
+        echo "PR title '$1' must be '<type>(<scope>): <description>', at most 72 characters, lowercase, without a trailing period" >&2
+        return 1
+    fi
+}
+
+container() {
+    docker image inspect "$image" >/dev/null 2>&1 || docker build -q -t "$image" .devcontainer >/dev/null
+    docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD:/w" -w /w "$image" bash -c "$1"
+}
+
+host() {
+    container "cmake -S firmware/tests/host -B /tmp/host-tests >/dev/null && cmake --build /tmp/host-tests >/dev/null && ctest --test-dir /tmp/host-tests --output-on-failure"
+}
+
+docs() {
+    container "mkdocs build --strict -f mkdocs.yml -d /tmp/site 2>&1 | grep -E 'WARNING|ERROR|Documentation built' ; test \${PIPESTATUS[0]} -eq 0"
+}
+
+firmware() {
+    for preset in cim_proto_v7-debug cim_proto_v7-release; do
+        container "cd firmware && cmake --preset $preset >/dev/null && cmake --build --preset $preset | tail -1"
+    done
+}
+
+consumer() {
+    container "cmake -S firmware/tests/consumer -B build/consumer -G Ninja -DPICO_BOARD=cim_proto_v7 >/dev/null && cmake --build build/consumer | tail -1"
+}
+
+case "${1:-all}" in
+    title) title "${2:?usage: scripts/check title \"<title>\"}" ;;
+    host|docs|firmware|consumer) "$1" ;;
+    all) host; docs; firmware ;;
+    *) echo "usage: scripts/check [title <title>|host|docs|firmware|consumer]" >&2; exit 2 ;;
+esac
